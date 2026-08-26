@@ -354,7 +354,7 @@
 
     function shareInvitation() {
       const shareUrl = window.location.href;
-      const text = encodeURIComponent("{{SHARE_TEXT}} de {{NAME}}\nDía: {{DATE}} a las {{TIME}}\nLugar: {{ADDRESS}}, {{CITY}}\n\nToca el enlace para ver la tarjeta interactiva con música y mapa:\n" + shareUrl);
+      const text = encodeURIComponent("Hola, te comparto la invitacion:\n" + shareUrl);
       window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
     }
 

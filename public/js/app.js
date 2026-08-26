@@ -3,7 +3,6 @@ let currentOrderId = null;
 let pollInterval = null;
 let unlockedCardUrl = null;
 let isAudioPlaying = false;
-let paypalButtonsRendered = false;
 
 // Estado de la tarjeta
 const cardState = {
@@ -81,6 +80,29 @@ function showToast(msg) {
   toastEl.innerText = msg;
   toastEl.classList.add('show');
   setTimeout(() => toastEl.classList.remove('show'), 2500);
+}
+
+/**
+ * Pop-up Modal Estilo Mercado Pago (Fondo blanco, esquinas redondeadas, gris bold)
+ */
+function showFunModal({ title = 'Un momento', text = '' }) {
+  const titleEl = document.getElementById('funModalTitle');
+  const textEl = document.getElementById('funModalText');
+  const overlayEl = document.getElementById('funModalOverlay');
+  if (titleEl) titleEl.innerText = title;
+  if (textEl) textEl.innerText = text;
+  if (overlayEl) overlayEl.classList.add('show');
+}
+
+function closeFunModal() {
+  const overlayEl = document.getElementById('funModalOverlay');
+  if (overlayEl) overlayEl.classList.remove('show');
+}
+
+function handleFunModalOverlayClick(event) {
+  if (event.target.id === 'funModalOverlay') {
+    closeFunModal();
+  }
 }
 
 /**
@@ -167,11 +189,11 @@ function goToStep(step) {
     const cfg = eventModelConfig[cardState.eventType];
 
     if (!name) {
-      alert('Por favor, ingresa el nombre.');
+      showFunModal({ title: 'Dato requerido', text: 'Por favor ingresa el nombre.' });
       return;
     }
     if (cfg.showAge && !age) {
-      alert('Por favor, ingresa los años que cumple.');
+      showFunModal({ title: 'Dato requerido', text: 'Por favor ingresa los años que cumple.' });
       return;
     }
 
@@ -188,11 +210,11 @@ function goToStep(step) {
     const time = document.getElementById('inputTime').value.trim();
 
     if (!address || !city) {
-      alert('Por favor, completa la dirección y localidad.');
+      showFunModal({ title: 'Ubicación requerida', text: 'Por favor completa la dirección y localidad.' });
       return;
     }
     if (!date || !time) {
-      alert('Por favor, ingresa el día y la hora.');
+      showFunModal({ title: 'Horario requerido', text: 'Por favor ingresa el día y la hora del encuentro.' });
       return;
     }
 
@@ -227,10 +249,6 @@ function goToStep(step) {
 
   currentStep = step;
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  if (step === 4) {
-    initPayPalButtons();
-  }
 }
 
 /**
@@ -295,108 +313,62 @@ function toggleAudio() {
 }
 
 /**
- * Renderizado oficial de Botones de PayPal (PayPal Checkout v2)
+ * Iniciar Pago con PayPal ($5.00 USD)
+ * Método idéntico a Mercado Pago: abre pestaña limpia con window.open,
+ * sin popups dobles ni about:blank.
  */
-function initPayPalButtons() {
-  if (paypalButtonsRendered) return;
-
-  const container = document.getElementById('paypal-button-container');
-  if (!container) return;
-
-  if (typeof window.paypal === 'undefined' || !window.paypal.Buttons) {
-    container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Conectando con PayPal...</div>';
-    
-    let attempts = 0;
-    const retryInterval = setInterval(() => {
-      attempts++;
-      if (typeof window.paypal !== 'undefined' && window.paypal.Buttons) {
-        clearInterval(retryInterval);
-        renderPayPalButtons(container);
-      } else if (attempts > 15) {
-        clearInterval(retryInterval);
-        container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Modo pruebas activo. Use el botón de simulación abajo.</div>';
-      }
-    }, 400);
-    return;
+async function handlePayPayPal() {
+  const btn = document.getElementById('btnPayPayPal');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
   }
 
-  renderPayPalButtons(container);
-}
-
-function renderPayPalButtons(container) {
-  if (paypalButtonsRendered) return;
-  container.innerHTML = '';
+  const statusBox = document.getElementById('cardStatusBox');
+  statusBox.style.display = 'block';
+  document.getElementById('statusSpinner').style.display = 'block';
+  document.getElementById('statusMsg').innerText = 'Iniciando checkout en PayPal...';
 
   try {
-    window.paypal.Buttons({
-      style: {
-        layout: 'vertical',
-        color: 'gold',
-        shape: 'rect',
-        label: 'paypal'
-      },
+    const res = await fetch('/api/paypal/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cardData: cardState })
+    });
 
-      // Iniciar orden con el backend privado
-      createOrder: async function() {
-        const statusBox = document.getElementById('cardStatusBox');
-        statusBox.style.display = 'block';
-        statusBox.className = 'status-box';
-        document.getElementById('statusSpinner').style.display = 'block';
-        document.getElementById('statusMsg').innerText = 'Iniciando checkout seguro con PayPal...';
+    const data = await res.json();
 
-        const res = await fetch('/api/paypal/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cardData: cardState })
-        });
-
-        const data = await res.json();
-
-        if (!data.success || !data.paypalOrderId) {
-          throw new Error(data.error || 'No se pudo crear la orden en PayPal.');
-        }
-
-        currentOrderId = data.orderId;
-        startCardPolling(currentOrderId);
-
-        return data.paypalOrderId;
-      },
-
-      // Captura automática tras la aprobación del cliente
-      onApprove: async function(data) {
-        document.getElementById('statusMsg').innerText = 'Acreditando pago en PayPal...';
-
-        const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ localOrderId: currentOrderId })
-        });
-
-        const captureData = await res.json();
-
-        if (captureData.success && captureData.approved) {
-          handleCardApproved(captureData);
-        } else {
-          document.getElementById('statusMsg').innerText = 'Esperando confirmación final de fondos...';
-        }
-      },
-
-      onCancel: function() {
-        document.getElementById('statusSpinner').style.display = 'none';
-        document.getElementById('statusMsg').innerText = 'Pago cancelado por el usuario.';
-      },
-
-      onError: function(err) {
-        console.error('[PayPal Error]', err);
-        document.getElementById('statusSpinner').style.display = 'none';
-        document.getElementById('statusMsg').innerText = 'Ocurrió un error al procesar el pago con PayPal.';
-        showToast('Error en PayPal.');
+    if (!data.success || !data.approveUrl) {
+      showFunModal({
+        title: 'Un momento',
+        text: data.error || 'No se pudo generar la orden de pago. Por favor intenta de nuevo.'
+      });
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
       }
-    }).render('#paypal-button-container');
+      return;
+    }
 
-    paypalButtonsRendered = true;
+    currentOrderId = data.orderId;
+    startCardPolling(currentOrderId);
+
+    // Abrir pasarela en pestaña limpia (método Mercado Pago)
+    window.open(data.approveUrl, '_blank');
+
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
   } catch (err) {
-    console.error('Error renderizando PayPal Buttons:', err);
+    showFunModal({
+      title: 'Conexión interrumpida',
+      text: 'No pudimos comunicarnos con el servidor. Revisa tu conexión.'
+    });
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
   }
 }
 
@@ -461,20 +433,11 @@ function handleCardApproved(order) {
 }
 
 /**
- * Enviar invitación final oficial por WhatsApp (Sin emojis en texto)
+ * Exportar a WhatsApp: Saludo simple + Link, nada más (Sin repeticiones ni emojis)
  */
 function handleShareFinalInvitation() {
   if (!unlockedCardUrl) return;
-  const cfg = eventModelConfig[cardState.eventType] || eventModelConfig['cumpleanos'];
-  let locationStr = `${cardState.address}, ${cardState.city}`;
-  if (cardState.province) locationStr += `, ${cardState.province}`;
-
-  let titleLine = `${cfg.shareText} de ${cardState.name}`;
-  if (cardState.eventType === 'cumpleanos' && cardState.age) {
-    titleLine += ` (${cardState.age} años)`;
-  }
-
-  const text = encodeURIComponent(`${titleLine}\nDía: ${cardState.date} a las ${cardState.time}\nLugar: ${locationStr}\n\nToca el enlace para ver la tarjeta interactiva con música y mapa:\n${unlockedCardUrl}`);
+  const text = encodeURIComponent(`Hola, te comparto la invitacion:\n${unlockedCardUrl}`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
@@ -509,6 +472,6 @@ async function handleSimulateCardPayment() {
       throw new Error(simData.error || 'Error en la simulación');
     }
   } catch (err) {
-    alert('Error en simulación: ' + err.message);
+    showFunModal({ title: 'Error', text: err.message });
   }
 }

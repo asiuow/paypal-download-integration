@@ -259,8 +259,10 @@
               <strong>$5.00 USD</strong>
             </div>
 
-            <!-- Botones oficiales de PayPal -->
-            <div id="paypal-button-container" style="margin-top: 15px;"></div>
+            <!-- Botón oficial de PayPal (Método Mercado Pago: pestaña limpia sin popups dobles) -->
+            <button id="btnPayPayPal" class="btn btn-paypal" onclick="handlePayPayPal()">
+              Pagar con PayPal ($5.00 USD)
+            </button>
 
             <div style="margin-top: 14px;">
               <button class="btn-sim-link" onclick="handleSimulateCardPayment()">
@@ -297,6 +299,15 @@
   </main>
 
   <div id="toast" class="toast">Enlace copiado</div>
+
+  <!-- Pop-Up Modal Estilo Mercado Pago (Fondo blanco, esquinas redondeadas, gris bold) -->
+  <div id="funModalOverlay" class="fun-modal-overlay" onclick="handleFunModalOverlayClick(event)">
+    <div class="fun-modal-card">
+      <h3 id="funModalTitle" class="fun-modal-title">Un momento</h3>
+      <p id="funModalText" class="fun-modal-text">Por favor completa los datos para continuar.</p>
+      <button class="fun-modal-btn" onclick="closeFunModal()">De acuerdo</button>
+    </div>
+  </div>
 
   <script src="/js/app.js"></script>
 </body>
