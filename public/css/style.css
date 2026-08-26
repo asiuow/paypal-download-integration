@@ -373,6 +373,49 @@ input:focus, select:focus {
     0 4px 10px rgba(34, 197, 94, 0.3);
 }
 
+/* Transición para compactar botones al centro y hacerlos desaparecer */
+.compact-collapse {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s ease,
+              max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.5s ease,
+              padding 0.5s ease;
+  transform-origin: center center;
+}
+
+.compact-collapse.collapsed {
+  opacity: 0 !important;
+  transform: scale(0.65) translateY(12px) !important;
+  max-height: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-top-width: 0 !important;
+  border-bottom-width: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+.btn-whatsapp-3d.revealed {
+  animation: popInGreen 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes popInGreen {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(15px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.04) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .btn-pay {
   background: linear-gradient(135deg, #009ee3, #007eb5);
   color: #ffffff;

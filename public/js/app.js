@@ -19,54 +19,54 @@ const cardState = {
   time: ''
 };
 
-// Modelos disponibles
+// Modelos disponibles (Sin emojis al lado del texto)
 const eventModelConfig = {
   'cumpleanos': {
     title: '1. Cumpleaños',
-    h2: '¿Quién cumple años? 🎂',
+    h2: '¿Quién cumple años?',
     desc: 'Ingresa los datos del cumpleañero/a',
     labelName: 'Nombre del cumpleañero/a',
     labelAge: '¿Cuántos años cumple?',
     showAge: true,
     badgeDefault: '¡Cumple {age} Años!',
-    headline: '¡Te invito a celebrar mi cumpleaños juntos! 🎂🎈',
-    shareText: 'Te invito a mi cumple 🎉',
+    headline: '¡Te invito a celebrar mi cumpleaños juntos!',
+    shareText: 'Te invito a mi cumple',
     color: '#ef4444'
   },
   'bautismo': {
     title: '2. Bautismo',
-    h2: '¿Quién se bautiza? 🕊️',
+    h2: '¿Quién se bautiza?',
     desc: 'Ingresa los datos para la bendición',
     labelName: 'Nombre del bautizado/a',
     labelAge: 'Edad o fecha especial (opcional)',
     showAge: false,
-    badgeDefault: 'Mi Bautismo 🕊️',
-    headline: 'Te invito a compartir este momento tan especial y bendecido ✨',
-    shareText: 'Te invito a mi bautismo 🕊️',
+    badgeDefault: 'Mi Bautismo',
+    headline: 'Te invito a compartir este momento tan especial y bendecido',
+    shareText: 'Te invito a mi bautismo',
     color: '#0ea5e9'
   },
   'asado': {
     title: '3. Asado',
-    h2: '¿Quién invita al asado? 🥩',
+    h2: '¿Quién invita al asado?',
     desc: 'Detalles del anfitrión o motivo del asado',
     labelName: 'Nombre del asador / anfitrión',
     labelAge: 'Motivo del asado (opcional)',
     showAge: false,
-    badgeDefault: '¡Gran Asado! 🥩🔥',
-    headline: '¡Se prende el fuego! Te invito a compartir un gran asado 🍷',
-    shareText: 'Te invito a un asado 🥩',
+    badgeDefault: '¡Gran Asado!',
+    headline: '¡Se prende el fuego! Te invito a compartir un gran asado',
+    shareText: 'Te invito a un asado',
     color: '#f97316'
   },
   'evento': {
     title: '4. Evento Especial',
-    h2: '¿Nombre del evento o anfitrión? 🥂',
+    h2: '¿Nombre del evento o anfitrión?',
     desc: 'Celebraciones, fiestas privadas o aniversarios',
     labelName: 'Nombre del evento / anfitrión',
     labelAge: 'Detalle adicional (opcional)',
     showAge: false,
-    badgeDefault: 'Evento Especial 🌟',
-    headline: '¡Estás cordialmente invitado a celebrar con nosotros! 🥂',
-    shareText: 'Te invito a mi evento 🥂',
+    badgeDefault: 'Evento Especial',
+    headline: 'Estás cordialmente invitado a celebrar con nosotros',
+    shareText: 'Te invito a mi evento',
     color: '#8b5cf6'
   }
 };
@@ -149,8 +149,8 @@ function handlePhotoUpload(event) {
       document.getElementById('imgPreview').src = cardState.photo;
       document.getElementById('imgPreview').style.display = 'block';
       document.getElementById('photoIcon').style.display = 'none';
-      document.getElementById('uploaderText').innerText = 'Foto lista ✅';
-      document.getElementById('sumPhotoStatus').innerText = 'Cargada y Optimizada ✅';
+      document.getElementById('uploaderText').innerText = 'Foto lista';
+      document.getElementById('sumPhotoStatus').innerText = 'Cargada y Optimizada';
     };
     img.src = e.target.result;
   };
@@ -283,13 +283,13 @@ function toggleAudio() {
   if (isAudioPlaying) {
     audioEl.pause();
     isAudioPlaying = false;
-    btnPlayMusic.innerText = '▶️ Escuchar';
+    btnPlayMusic.innerText = 'Escuchar';
   } else {
     audioEl.play().then(() => {
       isAudioPlaying = true;
-      btnPlayMusic.innerText = '⏸️ Pausar';
+      btnPlayMusic.innerText = 'Pausar';
     }).catch(() => {
-      btnPlayMusic.innerText = '▶️ Escuchar';
+      btnPlayMusic.innerText = 'Escuchar';
     });
   }
 }
@@ -304,9 +304,8 @@ function initPayPalButtons() {
   if (!container) return;
 
   if (typeof window.paypal === 'undefined' || !window.paypal.Buttons) {
-    container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">⏳ Conectando con PayPal...</div>';
+    container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Conectando con PayPal...</div>';
     
-    // Reintentar cada 400ms hasta que el SDK termine de cargar
     let attempts = 0;
     const retryInterval = setInterval(() => {
       attempts++;
@@ -315,7 +314,7 @@ function initPayPalButtons() {
         renderPayPalButtons(container);
       } else if (attempts > 15) {
         clearInterval(retryInterval);
-        container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Modo pruebas activo. Use el botón de simulación abajo para probar.</div>';
+        container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Modo pruebas activo. Use el botón de simulación abajo.</div>';
       }
     }, 400);
     return;
@@ -423,34 +422,46 @@ function startCardPolling(orderId) {
 }
 
 /**
- * Desbloqueo y entrega de la tarjeta tras aprobación
+ * Desbloqueo y entrega tras aprobación:
+ * Todos los botones se compactan moviéndose al medio y desaparecen,
+ * quedando ÚNICAMENTE el botón verde 3D de WhatsApp.
  */
 function handleCardApproved(order) {
   if (pollInterval) clearInterval(pollInterval);
 
-  document.getElementById('statusSpinner').style.display = 'none';
+  // 1. Ocultar spinner
+  const spinner = document.getElementById('statusSpinner');
+  if (spinner) spinner.style.display = 'none';
+
+  // 2. Compactar y hacer desaparecer en transición al centro todos los botones previos
+  const collapseArea = document.getElementById('paywallCollapseArea');
+  if (collapseArea) {
+    collapseArea.classList.add('collapsed');
+  }
+
+  // 3. Preparar estado de éxito
   const statusBox = document.getElementById('cardStatusBox');
+  statusBox.style.display = 'block';
   statusBox.classList.add('status-success');
-  document.getElementById('statusMsg').innerText = '🎉 ¡Pago acreditado en PayPal! Tu tarjeta oficial está lista:';
+  document.getElementById('statusMsg').innerText = 'Pago acreditado con éxito. Tu tarjeta está lista:';
 
   const accessUrl = order.accessUrl || `/tarjeta/${order.orderId || order.id}`;
   unlockedCardUrl = window.location.origin + accessUrl;
-  document.getElementById('btnOpenFinalCard').href = accessUrl;
-  document.getElementById('unlockedActions').style.display = 'flex';
 
-  showToast('¡Tarjeta activada con éxito!');
+  // 4. Mostrar y animar el botón verde 3D de WhatsApp (el único que queda)
+  const actions = document.getElementById('unlockedActions');
+  actions.style.display = 'flex';
+
+  const btnShare = document.getElementById('btnWhatsappShare');
+  if (btnShare) {
+    btnShare.classList.add('revealed');
+  }
+
+  showToast('Tarjeta activada con éxito');
 }
 
 /**
- * Compartir en WhatsApp la web de creación
- */
-function handleShareWhatsApp() {
-  const text = encodeURIComponent(`¡Crea tu tarjeta digital interactiva con música y mapa! 🎉\n${window.location.origin}`);
-  window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-}
-
-/**
- * Enviar invitación final oficial por WhatsApp según el modelo
+ * Enviar invitación final oficial por WhatsApp (Sin emojis en texto)
  */
 function handleShareFinalInvitation() {
   if (!unlockedCardUrl) return;
@@ -463,7 +474,7 @@ function handleShareFinalInvitation() {
     titleLine += ` (${cardState.age} años)`;
   }
 
-  const text = encodeURIComponent(`✨ ${titleLine}!\n📅 Día: ${cardState.date} a las ${cardState.time}\n📍 Lugar: ${locationStr}\n\n🌟 Toca el enlace para ver la tarjeta interactiva con música y mapa:\n${unlockedCardUrl}`);
+  const text = encodeURIComponent(`${titleLine}\nDía: ${cardState.date} a las ${cardState.time}\nLugar: ${locationStr}\n\nToca el enlace para ver la tarjeta interactiva con música y mapa:\n${unlockedCardUrl}`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 

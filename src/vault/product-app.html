@@ -3,99 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>{{NAME}} | Tarjeta de Invitación</title>
-
-  <!-- Metadatos OpenGraph para WhatsApp, Telegram, iMessage -->
-  <meta property="og:type" content="website">
+  <title>{{OG_TITLE}} | Invitación</title>
+  
   <meta property="og:title" content="{{OG_TITLE}}">
   <meta property="og:description" content="{{OG_DESC}}">
-  <meta property="og:image" content="{{PHOTO}}">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="{{THEME_COLOR}}">
+  <meta property="og:type" content="website">
 
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: #0b0b0f;
-      color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      min-height: 100dvh;
+      background: #0b0b0f;
+      color: #f3f4f6;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 14px calc(40px + env(safe-area-inset-bottom, 0px));
-      overflow-x: hidden;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
       position: relative;
     }
 
-    /* Fondo ambiental */
     .confetti-bg {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 15%, {{THEME_COLOR}}22 0%, rgba(11, 11, 15, 0) 70%);
       pointer-events: none;
-      z-index: 0;
+      background-image: 
+        radial-gradient({{THEME_COLOR}}33 1.5px, transparent 1.5px),
+        radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+      background-size: 36px 36px, 18px 18px;
+      z-index: 1;
     }
 
-    /* Tarjeta Principal Scrolleable */
     .card-container {
       width: 100%;
-      max-width: 420px;
-      background: #14141a;
-      border: 1px solid #282833;
+      max-width: 440px;
+      background: #14141c;
+      border: 1px solid #232332;
       border-radius: 28px;
-      padding: 30px 18px 24px;
-      text-align: center;
+      padding: 24px 20px;
       position: relative;
       z-index: 10;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      text-align: center;
       margin: auto 0;
     }
 
-    /* Barra de Música */
     .music-bar-prompt {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed {{THEME_COLOR}}88;
+      border-radius: 14px;
+      padding: 10px 16px;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      background: linear-gradient(135deg, {{THEME_COLOR}}, #f59e0b);
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 20px;
+      gap: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 15px {{THEME_COLOR}}66;
-      animation: pulseBar 2s infinite ease-in-out;
-      border: none;
-      width: 100%;
+      color: #e5e7eb;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
 
-    @keyframes pulseBar {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
+    .music-bar-prompt:active {
+      transform: scale(0.98);
+      background: {{THEME_COLOR}}22;
     }
 
-    /* Foto */
     .photo-wrapper {
       width: 140px;
       height: 140px;
       margin: 0 auto 16px;
       border-radius: 50%;
       padding: 4px;
-      background: linear-gradient(135deg, {{THEME_COLOR}}, #f59e0b);
-      box-shadow: 0 0 25px {{THEME_COLOR}}55;
+      background: linear-gradient(135deg, {{THEME_COLOR}}, #ffffff55);
+      box-shadow: 0 8px 25px {{THEME_COLOR}}44;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
     .photo-img {
@@ -103,8 +98,13 @@
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      background-color: #222;
       display: block;
+      background: #1e1e2d;
+    }
+
+    .photo-placeholder {
+      font-size: 48px;
+      color: #9ca3af;
     }
 
     .badge-event {
@@ -136,7 +136,6 @@
       line-height: 1.4;
     }
 
-    /* Bloque Fecha y Hora */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -161,18 +160,16 @@
     }
 
     .info-card strong {
-      font-size: 14px;
+      font-size: 15px;
       color: #ffffff;
-      word-break: break-word;
     }
 
-    /* Bloque Ubicación y Mapa a escala de 3 manzanas */
     .location-box {
-      background: #1c1c24;
-      border: 1px solid #2e2e3a;
-      border-radius: 18px;
+      background: #181822;
+      border: 1px solid #282836;
+      border-radius: 20px;
       padding: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       text-align: left;
     }
 
@@ -215,7 +212,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       width: 100%;
       background: #2563eb;
       color: #ffffff;
@@ -226,27 +222,46 @@
       text-decoration: none;
     }
 
-    /* Botón Compartir WhatsApp */
-    .btn-whatsapp {
+    /* Botón 3D Verde Plástico con Letras en Bajo Relieve */
+    .btn-whatsapp-3d {
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      width: 100%;
-      background: #25d366;
-      color: #ffffff;
-      padding: 14px;
-      border-radius: 14px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #4ade80 0%, #22c55e 35%, #16a34a 70%, #15803d 100%);
+      border: 1px solid #166534;
+      border-top: 2px solid #86efac;
+      border-bottom: 2px solid #14532d;
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 4px rgba(0, 0, 0, 0.4),
+        0 6px 0 #0f5c2b,
+        0 12px 25px rgba(34, 197, 94, 0.45);
+      color: #e6ffed;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
       text-decoration: none;
       cursor: pointer;
-      border: none;
-      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+      text-shadow: 0 -1px 2px rgba(0, 0, 0, 0.85), 0 1px 1px rgba(255, 255, 255, 0.35);
+      transition: all 0.15s ease;
+      user-select: none;
     }
 
-    .btn-whatsapp:active {
-      transform: scale(0.98);
+    .btn-whatsapp-3d:hover {
+      filter: brightness(1.06);
+    }
+
+    .btn-whatsapp-3d:active {
+      transform: translateY(4px);
+      box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.4),
+        0 2px 0 #0f5c2b,
+        0 4px 10px rgba(34, 197, 94, 0.3);
     }
 
     footer {
@@ -260,7 +275,6 @@
 
   <div class="confetti-bg"></div>
 
-  <!-- Audio nativo HTML5 -->
   <audio id="bgAudio" loop preload="auto">
     <source src="/audio/celebration.mp3" type="audio/mpeg">
     <source src="/audio/celebration.wav" type="audio/wav">
@@ -268,37 +282,33 @@
 
   <main class="card-container">
     
-    <!-- Barra de control de música -->
     <button id="btnMusicBar" class="music-bar-prompt" onclick="toggleMusic()">
-      <span id="musicIcon">🎵</span>
       <span id="musicText">Toca aquí para escuchar la música</span>
     </button>
 
-    <!-- Foto -->
     <div class="photo-wrapper">
-      <img id="cardPhoto" src="{{PHOTO}}" alt="{{NAME}}" class="photo-img" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23ef4444\'/><text x=\'50\' y=\'65\' font-size=\'40\' text-anchor=\'middle\' fill=\'white\'>🎉</text></svg>'">
+      <img id="cardPhoto" src="{{PHOTO}}" alt="{{NAME}}" class="photo-img" onerror="this.style.display='none'; document.getElementById('photoAlt').style.display='block';">
+      <div id="photoAlt" class="photo-placeholder" style="display: none;">📷</div>
     </div>
 
     <div class="badge-event">{{BADGE_TEXT}}</div>
     <h1>{{NAME}}</h1>
     <p class="invite-text">{{HEADLINE_TEXT}}</p>
 
-    <!-- Información de Fecha y Hora -->
     <div class="info-grid">
       <div class="info-card">
-        <span>📅 Día</span>
+        <span>Día</span>
         <strong>{{DATE}}</strong>
       </div>
       <div class="info-card">
-        <span>⏰ Horario</span>
+        <span>Horario</span>
         <strong>{{TIME}}</strong>
       </div>
     </div>
 
-    <!-- Ubicación y Mapa Georreferenciado a Escala de 3 Manzanas -->
     <div class="location-box">
       <div class="location-header">
-        <span>📍 ¿Dónde es el encuentro?</span>
+        <span>¿Dónde es el encuentro?</span>
       </div>
       <div class="location-address">{{ADDRESS}}</div>
       <div class="location-city">{{CITY}}, {{PROVINCE}} ({{COUNTRY}})</div>
@@ -308,81 +318,55 @@
       </div>
 
       <a id="googleMapsBtn" href="https://www.google.com/maps/search/?api=1&query={{MAPS_QUERY_ENCODED}}" target="_blank" class="btn-maps">
-        🗺️ Abrir en Google Maps / GPS
+        Abrir en Google Maps / GPS
       </a>
     </div>
 
-    <!-- Compartir por WhatsApp -->
-    <button class="btn-whatsapp" onclick="shareInvitation()">
-      📲 Compartir Invitación por WhatsApp
+    <button class="btn-whatsapp-3d" onclick="shareInvitation()">
+      COMPARTIR EN WHATSAPP
     </button>
 
     <footer>
-      Invitación Oficial • pi.juguetes
+      Invitación Digital Interactiva
     </footer>
+
   </main>
 
   <script>
     const audio = document.getElementById('bgAudio');
-    const musicBar = document.getElementById('btnMusicBar');
-    const musicIcon = document.getElementById('musicIcon');
     const musicText = document.getElementById('musicText');
     let isPlaying = false;
 
     function toggleMusic() {
       if (isPlaying) {
         audio.pause();
-        musicIcon.innerText = '▶️';
-        musicText.innerText = 'Reproducir música';
         isPlaying = false;
+        musicText.innerText = 'Toca para reanudar música';
       } else {
         audio.play().then(() => {
-          musicIcon.innerText = '⏸️';
-          musicText.innerText = 'Música sonando • Toca para pausar';
           isPlaying = true;
-        }).catch((err) => {
-          console.warn('Audio play prevented:', err);
+          musicText.innerText = 'Música sonando... Toca para pausar';
+        }).catch(() => {
+          musicText.innerText = 'Toca aquí para escuchar la música';
         });
       }
     }
 
-    document.addEventListener('touchstart', function playOnce() {
+    function shareInvitation() {
+      const shareUrl = window.location.href;
+      const text = encodeURIComponent("{{SHARE_TEXT}} de {{NAME}}\nDía: {{DATE}} a las {{TIME}}\nLugar: {{ADDRESS}}, {{CITY}}\n\nToca el enlace para ver la tarjeta interactiva con música y mapa:\n" + shareUrl);
+      window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+    }
+
+    window.addEventListener('click', function initPlay() {
       if (!isPlaying) {
         audio.play().then(() => {
           isPlaying = true;
-          musicIcon.innerText = '⏸️';
-          musicText.innerText = 'Música sonando • Toca para pausar';
+          musicText.innerText = 'Música sonando... Toca para pausar';
         }).catch(() => {});
       }
-      document.removeEventListener('touchstart', playOnce);
+      window.removeEventListener('click', initPlay);
     }, { once: true });
-
-    // Geocodificación precisa con País, Provincia, Ciudad y Calle (Escala exacta de 3 manzanas)
-    const address = "{{ADDRESS}}";
-    const city = "{{CITY}}";
-    const province = "{{PROVINCE}}";
-    const country = "{{COUNTRY}}";
-    
-    if (address && city) {
-      const fullQuery = encodeURIComponent(`${address}, ${city}, ${province}, ${country}`);
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${fullQuery}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.length > 0) {
-            const lat = parseFloat(data[0].lat);
-            const lon = parseFloat(data[0].lon);
-            const delta = 0.0025; // Escala exacta de 3 manzanas (~250-300m)
-            const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
-            document.getElementById('mapFrame').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
-          }
-        })
-        .catch(() => {});
-    }
-
-    function shareInvitation() {
-      const text = encodeURIComponent(`{{SHARE_SHORT_TEXT}}\n${window.location.href}`);
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-    }
   </script>
 </body>
 </html>

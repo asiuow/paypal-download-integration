@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Creador de Tarjetas Digitales | PayPal Integration</title>
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230070ba'/><text x='50' y='65' font-size='40' text-anchor='middle' fill='white'>🎉</text></svg>">
 
-  <!-- SDK Oficial de PayPal (Cargado con Client ID público de Sandbox) -->
+  <!-- SDK Oficial de PayPal -->
   <script src="https://www.paypal.com/sdk/js?client-id=AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KlQEhTXEv8BYTxV94AYpDyORpT0vm_t9&currency=USD&enable-funding=card"></script>
 </head>
 <body>
@@ -25,7 +24,7 @@
 
     <!-- PANEL 0: HOME - 4 CARTAS EN FORMA DE ABANICO -->
     <section id="panel0" class="panel active">
-      <h2>Elige tu Tarjeta 🎴</h2>
+      <h2>Elige tu Tarjeta</h2>
       <p class="panel-desc">Toca una carta para traerla al frente y personalizarla</p>
 
       <!-- Escena de Cartas Superpuestas en Abanico -->
@@ -33,28 +32,24 @@
         
         <!-- 1. Cumpleaños -->
         <div id="cardCumple" class="fan-card card-cumple active-front" onclick="selectFanCard('cumpleanos', this)">
-          <div class="fan-card-icon">🎂</div>
           <div class="fan-card-title">Cumpleaños</div>
           <div class="fan-card-subtitle">Festejo y Torta</div>
         </div>
 
         <!-- 2. Bautismo -->
         <div id="cardBautismo" class="fan-card card-bautismo" onclick="selectFanCard('bautismo', this)">
-          <div class="fan-card-icon">🕊️</div>
           <div class="fan-card-title">Bautismo</div>
           <div class="fan-card-subtitle">Bendición y Amor</div>
         </div>
 
         <!-- 3. Asado -->
         <div id="cardAsado" class="fan-card card-asado" onclick="selectFanCard('asado', this)">
-          <div class="fan-card-icon">🥩</div>
           <div class="fan-card-title">Asado</div>
           <div class="fan-card-subtitle">Amigos y Fuego</div>
         </div>
 
         <!-- 4. Evento -->
         <div id="cardEvento" class="fan-card card-evento" onclick="selectFanCard('evento', this)">
-          <div class="fan-card-icon">🥂</div>
           <div class="fan-card-title">Evento</div>
           <div class="fan-card-subtitle">Celebración</div>
         </div>
@@ -67,13 +62,13 @@
       </div>
 
       <button id="btnStartWizard" class="btn btn-primary" onclick="goToStep(1)">
-        Personalizar este modelo →
+        Personalizar este modelo
       </button>
     </section>
 
     <!-- PANEL 1: Nombre, Edad y Foto -->
     <section id="panel1" class="panel">
-      <h2 id="step1Title">¿Cómo es tu nombre? 🎂</h2>
+      <h2 id="step1Title">¿Cómo es tu nombre?</h2>
       <p class="panel-desc" id="step1Desc">Ingresa los datos del homenajeado o anfitrión</p>
 
       <div class="form-group">
@@ -87,29 +82,29 @@
         <input type="number" id="inputAge" min="1" max="120" placeholder="Ej: 5">
       </div>
 
-      <!-- Cargador de Foto -->
+      <!-- Cargador de Foto con icono grande cuando no hay foto cargada -->
       <div class="form-group">
         <label>Foto destacada</label>
         <div class="photo-uploader" onclick="document.getElementById('filePhoto').click()">
           <input type="file" id="filePhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
           <div class="photo-preview-box" id="previewPhotoBox">
-            <span id="photoIcon" style="font-size: 32px;">📷</span>
+            <span id="photoIcon" style="font-size: 40px;">📷</span>
             <img id="imgPreview" src="" style="display: none;">
           </div>
-          <div class="uploader-text" id="uploaderText">Subir una linda foto</div>
+          <div class="uploader-text" id="uploaderText">Subir una foto</div>
           <div class="uploader-sub">Toca aquí para seleccionar de tu galería</div>
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(0)">← Cambiar modelo</button>
-        <button class="btn btn-primary" onclick="goToStep(2)">Siguiente paso →</button>
+        <button class="btn btn-secondary" onclick="goToStep(0)">Cambiar modelo</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Siguiente paso</button>
       </div>
     </section>
 
     <!-- PANEL 2: Ubicación Geográfica Precisa y Horario -->
     <section id="panel2" class="panel">
-      <h2>¿Dónde y cuándo es? 📍</h2>
+      <h2>¿Dónde y cuándo es?</h2>
       <p class="panel-desc">Completa los datos para ubicar el mapa con total exactitud</p>
 
       <div class="form-grid-2">
@@ -146,14 +141,14 @@
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(1)">← Volver</button>
-        <button class="btn btn-primary" onclick="goToStep(3)">Siguiente paso →</button>
+        <button class="btn btn-secondary" onclick="goToStep(1)">Volver</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Siguiente paso</button>
       </div>
     </section>
 
     <!-- PANEL 3: Chequeo de Información -->
     <section id="panel3" class="panel">
-      <h2>Revisa los datos 👀</h2>
+      <h2>Revisa los datos</h2>
       <p class="panel-desc">Verifica la información antes de maquetar la tarjeta final</p>
 
       <div class="summary-card">
@@ -192,8 +187,8 @@
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(2)">← Volver</button>
-        <button class="btn btn-primary" onclick="generateCardPreview()">🎉 Formar mi Tarjeta</button>
+        <button class="btn btn-secondary" onclick="goToStep(2)">Volver</button>
+        <button class="btn btn-primary" onclick="generateCardPreview()">Formar mi Tarjeta</button>
       </div>
     </section>
 
@@ -209,23 +204,23 @@
 
         <div class="card-badge" id="cardAgeBadge">¡Cumple 5 Años!</div>
         <h1 class="card-title" id="cardNameTitle">Mateo</h1>
-        <p class="card-invite-msg" id="cardHeadlineText">¡Te invito a celebrar juntos! 🎈🍰</p>
+        <p class="card-invite-msg" id="cardHeadlineText">¡Te invito a celebrar juntos!</p>
 
         <!-- Bloque Fecha y Hora -->
         <div class="card-grid-info">
           <div class="grid-cell">
-            <span>📅 Día</span>
+            <span>Día</span>
             <strong id="cardDateText">Sábado 15</strong>
           </div>
           <div class="grid-cell">
-            <span>⏰ Horario</span>
+            <span>Horario</span>
             <strong id="cardTimeText">18:00 hs</strong>
           </div>
         </div>
 
         <!-- Bloque Ubicación Geográfica con Escala de 3 Manzanas -->
         <div class="map-box">
-          <div class="map-location-title">📍 ¿Dónde es el encuentro?</div>
+          <div class="map-location-title">¿Dónde es el encuentro?</div>
           <div class="map-address-text" id="cardAddressText">Av. San Martín 1540</div>
           <div class="map-city-text" id="cardCityText">Rosario, Santa Fe (Argentina)</div>
 
@@ -235,17 +230,17 @@
           </div>
 
           <a id="cardGmapsLink" href="#" target="_blank" class="btn-gmaps">
-            🗺️ Abrir en Google Maps / GPS
+            Abrir en Google Maps / GPS
           </a>
         </div>
 
         <!-- Reproductor de Música -->
         <div class="audio-bar">
           <div class="audio-label">
-            <span>🎵 Música de Celebración</span>
+            <span>Música de Celebración</span>
           </div>
           <button id="btnPlayMusic" class="btn-play-music" onclick="toggleAudio()">
-            ▶️ Escuchar
+            Escuchar
           </button>
         </div>
 
@@ -256,39 +251,41 @@
 
         <!-- Bloque de Compra con PayPal Checkout v2 -->
         <div class="paywall-block">
-          <div class="price-box">
-            <span>Precio de activación</span>
-            <strong>$5.00 USD</strong>
-          </div>
 
-          <!-- Botones oficiales de PayPal (PayPal + Tarjetas de Débito/Crédito) -->
-          <div id="paypal-button-container" style="margin-top: 15px;"></div>
+          <!-- Área que se compacta al centro y desaparece al pagar -->
+          <div id="paywallCollapseArea" class="compact-collapse">
+            <div class="price-box">
+              <span>Precio de activación</span>
+              <strong>$5.00 USD</strong>
+            </div>
 
-          <!-- Estado del Pago en Tiempo Real -->
-          <div id="cardStatusBox" class="status-box">
-            <div id="statusSpinner" class="status-spinner"></div>
-            <div id="statusMsg" style="font-size: 13px; font-weight: 600; color: #ffffff;">Esperando confirmación en PayPal...</div>
+            <!-- Botones oficiales de PayPal -->
+            <div id="paypal-button-container" style="margin-top: 15px;"></div>
 
-            <div id="unlockedActions" style="display: none; flex-direction: column; gap: 12px; margin-top: 16px;">
-              <a id="btnOpenFinalCard" href="#" target="_blank" class="btn btn-primary">
-                🌟 Abrir Tarjeta Oficial con Música
-              </a>
-              <button class="btn-whatsapp-3d" onclick="handleShareFinalInvitation()">
-                📲 COMPARTIR EN WHATSAPP
+            <div style="margin-top: 14px;">
+              <button class="btn-sim-link" onclick="handleSimulateCardPayment()">
+                Simular pago aprobado (Modo Pruebas)
+              </button>
+            </div>
+
+            <div style="margin-top: 14px;">
+              <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="goToStep(1)">
+                Modificar datos de la tarjeta
               </button>
             </div>
           </div>
 
-          <div style="margin-top: 12px;">
-            <button class="btn-sim-link" onclick="handleSimulateCardPayment()">
-              ⚡ Simular pago aprobado (Modo Pruebas)
-            </button>
-          </div>
+          <!-- Estado del Pago en Tiempo Real -->
+          <div id="cardStatusBox" class="status-box" style="display: none;">
+            <div id="statusSpinner" class="status-spinner" style="display: none;"></div>
+            <div id="statusMsg" style="font-size: 14px; font-weight: 600; color: #ffffff;">Esperando confirmación en PayPal...</div>
 
-          <div style="margin-top: 16px;">
-            <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="goToStep(1)">
-              ✏️ Modificar datos de la tarjeta
-            </button>
+            <!-- ÚNICO BOTÓN QUE QUEDA TRAS PAGAR: EL VERDE 3D -->
+            <div id="unlockedActions" style="display: none; flex-direction: column; margin-top: 16px;">
+              <button id="btnWhatsappShare" class="btn-whatsapp-3d" onclick="handleShareFinalInvitation()">
+                COMPARTIR EN WHATSAPP
+              </button>
+            </div>
           </div>
 
         </div>
