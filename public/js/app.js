@@ -304,11 +304,28 @@ function initPayPalButtons() {
   if (!container) return;
 
   if (typeof window.paypal === 'undefined' || !window.paypal.Buttons) {
-    console.warn('[PayPal] SDK no cargado aún o bloqueado. Se habilitará el modo simulación.');
-    container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Cargando botones de PayPal... (o use el botón de simulación abajo)</div>';
+    container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">⏳ Conectando con PayPal...</div>';
+    
+    // Reintentar cada 400ms hasta que el SDK termine de cargar
+    let attempts = 0;
+    const retryInterval = setInterval(() => {
+      attempts++;
+      if (typeof window.paypal !== 'undefined' && window.paypal.Buttons) {
+        clearInterval(retryInterval);
+        renderPayPalButtons(container);
+      } else if (attempts > 15) {
+        clearInterval(retryInterval);
+        container.innerHTML = '<div style="color: #9ca3af; font-size: 13px; text-align: center; padding: 10px;">Modo pruebas activo. Use el botón de simulación abajo para probar.</div>';
+      }
+    }, 400);
     return;
   }
 
+  renderPayPalButtons(container);
+}
+
+function renderPayPalButtons(container) {
+  if (paypalButtonsRendered) return;
   container.innerHTML = '';
 
   try {

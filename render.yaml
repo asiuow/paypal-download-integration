@@ -11,7 +11,7 @@ services:
       - key: PAYPAL_MODE
         value: sandbox
       - key: PAYPAL_CLIENT_ID
-        value: AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KIQEHTXEv8BYTxV94AYpDyORpT0vm_t9
+        value: AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KlQEhTXEv8BYTxV94AYpDyORpT0vm_t9
       - key: PAYPAL_CLIENT_SECRET
         sync: false
       - key: ITEM_PRICE
