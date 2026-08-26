@@ -1,0 +1,22 @@
+{
+  "name": "paypal-download-integration",
+  "version": "1.0.0",
+  "description": "Plataforma de venta y entrega automática de archivos digitales con PayPal Checkout v2",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/verify-flow.js",
+    "build": "npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "uuid": "^11.0.5"
+  }
+}

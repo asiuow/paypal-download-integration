@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>¡Cumple de {{NAME}}! 🎉</title>
+
+  <!-- Metadatos OpenGraph universales para WhatsApp, Telegram, iMessage y redes -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="🎉 ¡Estás invitado al cumpleaños de {{NAME}}!">
+  <meta property="og:description" content="🎂 Festejamos {{AGE}} años • 📅 {{DATE}} a las {{TIME}} • 📍 {{ADDRESS}}, {{CITY}}. ¡Toca para abrir la tarjeta interactiva!">
+  <meta property="og:image" content="{{PHOTO}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#ef4444">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0b0b0f;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 14px calc(40px + env(safe-area-inset-bottom, 0px));
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fondo festivo suave */
+    .confetti-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 15%, rgba(239, 68, 68, 0.15) 0%, rgba(11, 11, 15, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Tarjeta Principal Scrolleable */
+    .card-container {
+      width: 100%;
+      max-width: 420px;
+      background: #14141a;
+      border: 1px solid #282833;
+      border-radius: 28px;
+      padding: 30px 18px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      margin: auto 0;
+    }
+
+    /* Barra / Botón Flotante de Música */
+    .music-bar-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      animation: pulseBar 2s infinite ease-in-out;
+      border: none;
+      width: 100%;
+    }
+
+    @keyframes pulseBar {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    /* Foto del Cumpleañero/a */
+    .photo-wrapper {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+    }
+
+    .photo-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #222;
+      display: block;
+    }
+
+    .badge-age {
+      display: inline-block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      color: #ffffff;
+      word-break: break-word;
+    }
+
+    .invite-text {
+      font-size: 15px;
+      color: #d1d5db;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    /* Bloque Fecha y Hora */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .info-card {
+      background: #1c1c24;
+      border: 1px solid #2e2e3a;
+      border-radius: 16px;
+      padding: 12px 8px;
+    }
+
+    .info-card span {
+      display: block;
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .info-card strong {
+      font-size: 14px;
+      color: #ffffff;
+      word-break: break-word;
+    }
+
+    /* Bloque Ubicación y Mapa a escala de 3 manzanas */
+    .location-box {
+      background: #1c1c24;
+      border: 1px solid #2e2e3a;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 22px;
+      text-align: left;
+    }
+
+    .location-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ef4444;
+      margin-bottom: 6px;
+    }
+
+    .location-address {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .location-city {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 190px;
+      border-radius: 12px;
+      border: 1px solid #333344;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .map-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .btn-maps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Botón Compartir WhatsApp */
+    .btn-whatsapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: #25d366;
+      color: #ffffff;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp:active {
+      transform: scale(0.98);
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="confetti-bg"></div>
+
+  <!-- Audio nativo HTML5 con fuentes cruzadas -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="/audio/celebration.mp3" type="audio/mpeg">
+    <source src="/audio/celebration.wav" type="audio/wav">
+  </audio>
+
+  <main class="card-container">
+    
+    <!-- Barra de control y activación de música para móviles -->
+    <button id="btnMusicBar" class="music-bar-prompt" onclick="toggleMusic()">
+      <span id="musicIcon">🎵</span>
+      <span id="musicText">Toca aquí para escuchar la música</span>
+    </button>
+
+    <!-- Foto del Cumpleañero/a -->
+    <div class="photo-wrapper">
+      <img id="cardPhoto" src="{{PHOTO}}" alt="{{NAME}}" class="photo-img" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23ef4444\'/><text x=\'50\' y=\'65\' font-size=\'40\' text-anchor=\'middle\' fill=\'white\'>🎉</text></svg>'">
+    </div>
+
+    <div class="badge-age">¡Cumple {{AGE}} Años!</div>
+    <h1>{{NAME}}</h1>
+    <p class="invite-text">¡Te invito a festejar mi cumpleaños juntos! 🎂🎈</p>
+
+    <!-- Información de Fecha y Hora -->
+    <div class="info-grid">
+      <div class="info-card">
+        <span>📅 Día</span>
+        <strong>{{DATE}}</strong>
+      </div>
+      <div class="info-card">
+        <span>⏰ Horario</span>
+        <strong>{{TIME}}</strong>
+      </div>
+    </div>
+
+    <!-- Ubicación y Mapa a escala de 3 manzanas -->
+    <div class="location-box">
+      <div class="location-header">
+        <span>📍 ¿Dónde festejamos?</span>
+      </div>
+      <div class="location-address">{{ADDRESS}}</div>
+      <div class="location-city">{{CITY}}</div>
+
+      <div class="map-frame">
+        <iframe id="mapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-58.385%2C-34.606%2C-58.378%2C-34.600&layer=mapnik&marker=-34.603%2C-58.3815"></iframe>
+      </div>
+
+      <a id="googleMapsBtn" href="https://www.google.com/maps/search/?api=1&query={{ADDRESS}},%20{{CITY}}" target="_blank" class="btn-maps">
+        🗺️ Abrir en Google Maps / GPS
+      </a>
+    </div>
+
+    <!-- Compartir por WhatsApp -->
+    <button class="btn-whatsapp" onclick="shareInvitation()">
+      📲 Compartir Invitación por WhatsApp
+    </button>
+
+    <footer>
+      Invitación Oficial • pi.juguetes
+    </footer>
+  </main>
+
+  <script>
+    const audio = document.getElementById('bgAudio');
+    const musicBar = document.getElementById('btnMusicBar');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        audio.pause();
+        musicIcon.innerText = '▶️';
+        musicText.innerText = 'Reproducir música de fiesta';
+        isPlaying = false;
+      } else {
+        audio.play().then(() => {
+          musicIcon.innerText = '⏸️';
+          musicText.innerText = 'Música sonando • Toca para pausar';
+          isPlaying = true;
+        }).catch((err) => {
+          console.warn('Audio play prevented:', err);
+        });
+      }
+    }
+
+    // Compatibilidad universal con navegadores móviles (iOS Safari, Android Chrome):
+    // El primer toque en la pantalla activa el audio si el usuario lo desea
+    document.addEventListener('touchstart', function playOnce() {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+          musicIcon.innerText = '⏸️';
+          musicText.innerText = 'Música sonando • Toca para pausar';
+        }).catch(() => {});
+      }
+      document.removeEventListener('touchstart', playOnce);
+    }, { once: true });
+
+    // Geocodificación dinámica a escala de 3 manzanas
+    const address = "{{ADDRESS}}";
+    const city = "{{CITY}}";
+    if (address && city) {
+      const query = encodeURIComponent(address + ', ' + city);
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            const delta = 0.0025; // 3 manzanas (~250-300m)
+            const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
+            document.getElementById('mapFrame').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+          }
+        })
+        .catch(() => {});
+    }
+
+    function shareInvitation() {
+      const text = encodeURIComponent(`🎂 ¡Hola! Te invito al cumpleaños de {{NAME}} ({{AGE}} años) 🎉\n📅 Día: {{DATE}} a las {{TIME}}\n📍 Lugar: {{ADDRESS}}, {{CITY}}\n\n🌟 Toca el enlace para ver la tarjeta interactiva con música y mapa:\n${window.location.href}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+  </script>
+</body>
+</html>

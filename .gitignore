@@ -1,0 +1,18 @@
+# Variables de entorno y secretos privados
+.env
+.env.local
+.env.*.local
+
+# Dependencias de Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Base de datos local persistente
+data/
+data/orders.json
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
