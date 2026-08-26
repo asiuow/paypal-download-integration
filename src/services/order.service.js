@@ -49,15 +49,23 @@ class OrderService {
   createOrder(metadata = {}, cardData = {}) {
     const orderId = uuidv4();
     const shortId = orderId.slice(0, 8); // Identificador corto universal (ej: 9af8058c)
+    const eventType = cardData.eventType || 'cumpleanos';
     
+    const eventTitles = {
+      'cumpleanos': 'Tarjeta de Cumpleaños',
+      'bautismo': 'Tarjeta de Bautismo',
+      'asado': 'Invitación a Gran Asado',
+      'evento': 'Invitación a Evento Especial'
+    };
+
     const order = {
       id: orderId,
       shortId: shortId,
       status: 'pending',
       item: {
         ...config.item,
-        title: `Tarjeta Digital de Cumpleaños - ${cardData.name || 'Personalizada'}`,
-        description: `Invitación interactiva para ${cardData.name || 'el cumpleañero'} (${cardData.age || ''} años)`
+        title: `${eventTitles[eventType] || 'Tarjeta Digital'} - ${cardData.name || 'Personalizada'}`,
+        description: `Invitación interactiva para ${cardData.name || 'evento'} (${eventType})`
       },
       amount: config.item.unitPrice,
       currency: config.item.currencyId,
@@ -67,11 +75,14 @@ class OrderService {
       paymentId: null,
       downloadToken: null,
       cardData: {
-        name: (cardData.name || 'Cumpleañero').slice(0, 20),
-        age: cardData.age || '1',
+        eventType: eventType,
+        name: (cardData.name || 'Festejado').slice(0, 20),
+        age: cardData.age || '',
         photo: cardData.photo || '',
         address: cardData.address || 'Av. Principal 123',
         city: cardData.city || 'Buenos Aires',
+        province: cardData.province || 'Buenos Aires',
+        country: cardData.country || 'Argentina',
         date: cardData.date || 'Sábado',
         time: cardData.time || '18:00 hs'
       },

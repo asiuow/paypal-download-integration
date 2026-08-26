@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Creador de Tarjetas Digitales | PayPal Integration</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230070ba'/><text x='50' y='65' font-size='40' text-anchor='middle' fill='white'>🎉</text></svg>">
-  
+
   <!-- SDK Oficial de PayPal (Cargado con Client ID público de Sandbox) -->
   <script src="https://www.paypal.com/sdk/js?client-id=AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KIQEHTXEv8BYTxV94AYpDyORpT0vm_t9&currency=USD&enable-funding=card"></script>
 </head>
@@ -14,33 +14,82 @@
 
   <main class="container">
     
-    <!-- Indicador de Pasos -->
+    <!-- Indicador de Pasos (0: Modelo, 1: Datos, 2: Lugar, 3: Chequeo, 4: Tarjeta) -->
     <div id="stepsIndicator" class="steps-indicator">
-      <div id="dot1" class="step-dot active"></div>
+      <div id="dot0" class="step-dot active"></div>
+      <div id="dot1" class="step-dot"></div>
       <div id="dot2" class="step-dot"></div>
       <div id="dot3" class="step-dot"></div>
       <div id="dot4" class="step-dot"></div>
     </div>
 
-    <!-- PANEL 1: Cumpleañero y Foto -->
-    <section id="panel1" class="panel active">
-      <h2>¿Quién cumple años? 🎂</h2>
-      <p class="panel-desc">Ingresa los datos principales del homenajeado</p>
+    <!-- PANEL 0: HOME - 4 CARTAS EN FORMA DE ABANICO -->
+    <section id="panel0" class="panel active">
+      <h2>Elige tu Tarjeta 🎴</h2>
+      <p class="panel-desc">Toca una carta para traerla al frente y personalizarla</p>
+
+      <!-- Escena de Cartas Superpuestas en Abanico -->
+      <div class="fan-scene">
+        
+        <!-- 1. Cumpleaños -->
+        <div id="cardCumple" class="fan-card card-cumple active-front" onclick="selectFanCard('cumpleanos', this)">
+          <div class="fan-card-icon">🎂</div>
+          <div class="fan-card-title">Cumpleaños</div>
+          <div class="fan-card-subtitle">Festejo y Torta</div>
+        </div>
+
+        <!-- 2. Bautismo -->
+        <div id="cardBautismo" class="fan-card card-bautismo" onclick="selectFanCard('bautismo', this)">
+          <div class="fan-card-icon">🕊️</div>
+          <div class="fan-card-title">Bautismo</div>
+          <div class="fan-card-subtitle">Bendición y Amor</div>
+        </div>
+
+        <!-- 3. Asado -->
+        <div id="cardAsado" class="fan-card card-asado" onclick="selectFanCard('asado', this)">
+          <div class="fan-card-icon">🥩</div>
+          <div class="fan-card-title">Asado</div>
+          <div class="fan-card-subtitle">Amigos y Fuego</div>
+        </div>
+
+        <!-- 4. Evento -->
+        <div id="cardEvento" class="fan-card card-evento" onclick="selectFanCard('evento', this)">
+          <div class="fan-card-icon">🥂</div>
+          <div class="fan-card-title">Evento</div>
+          <div class="fan-card-subtitle">Celebración</div>
+        </div>
+
+      </div>
+
+      <div style="text-align: center; margin-bottom: 16px;">
+        <span style="font-size: 13px; color: #9ca3af;">Modelo seleccionado: </span>
+        <strong id="selectedModelLabel" style="color: #ef4444; font-size: 14px;">1. Cumpleaños</strong>
+      </div>
+
+      <button id="btnStartWizard" class="btn btn-primary" onclick="goToStep(1)">
+        Personalizar este modelo →
+      </button>
+    </section>
+
+    <!-- PANEL 1: Nombre, Edad y Foto -->
+    <section id="panel1" class="panel">
+      <h2 id="step1Title">¿Cómo es tu nombre? 🎂</h2>
+      <p class="panel-desc" id="step1Desc">Ingresa los datos del homenajeado o anfitrión</p>
 
       <div class="form-group">
-        <label for="inputName">¿Cómo es tu nombre?</label>
+        <label for="inputName" id="labelName">Nombre completo o apodo</label>
         <input type="text" id="inputName" maxlength="20" placeholder="Ej: Mateo (máx. 20 letras)" oninput="updateCharCount()">
         <div id="charCount" class="char-counter">0 / 20</div>
       </div>
 
-      <div class="form-group">
-        <label for="inputAge">¿Cuántos años cumples?</label>
+      <div class="form-group" id="groupAge">
+        <label for="inputAge" id="labelAge">¿Cuántos años cumples?</label>
         <input type="number" id="inputAge" min="1" max="120" placeholder="Ej: 5">
       </div>
 
       <!-- Cargador de Foto -->
       <div class="form-group">
-        <label>Foto del cumpleañero/a</label>
+        <label>Foto destacada</label>
         <div class="photo-uploader" onclick="document.getElementById('filePhoto').click()">
           <input type="file" id="filePhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
           <div class="photo-preview-box" id="previewPhotoBox">
@@ -48,38 +97,52 @@
             <img id="imgPreview" src="" style="display: none;">
           </div>
           <div class="uploader-text" id="uploaderText">Subir una linda foto</div>
-          <div class="uploader-sub">Toca aquí para seleccionar desde tu galería</div>
+          <div class="uploader-sub">Toca aquí para seleccionar de tu galería</div>
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="goToStep(2)">
-        Siguiente paso →
-      </button>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(0)">← Cambiar modelo</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Siguiente paso →</button>
+      </div>
     </section>
 
-    <!-- PANEL 2: ¿Dónde y Cuándo es? -->
+    <!-- PANEL 2: Ubicación Geográfica Precisa y Horario -->
     <section id="panel2" class="panel">
       <h2>¿Dónde y cuándo es? 📍</h2>
-      <p class="panel-desc">Detalles del lugar y horario del festejo</p>
+      <p class="panel-desc">Completa los datos para ubicar el mapa con total exactitud</p>
 
-      <div class="form-group">
-        <label for="inputAddress">Dirección (Calle y Número)</label>
-        <input type="text" id="inputAddress" placeholder="Ej: Av. Corrientes 1234">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="inputCountry">País</label>
+          <input type="text" id="inputCountry" value="Argentina" placeholder="Ej: Argentina">
+        </div>
+        <div class="form-group">
+          <label for="inputProvince">Provincia / Estado</label>
+          <input type="text" id="inputProvince" placeholder="Ej: Buenos Aires">
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="inputCity">Ciudad / Localidad</label>
-        <input type="text" id="inputCity" placeholder="Ej: Buenos Aires">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="inputCity">Ciudad / Localidad</label>
+          <input type="text" id="inputCity" placeholder="Ej: Rosario">
+        </div>
+        <div class="form-group">
+          <label for="inputAddress">Dirección (Calle y N°)</label>
+          <input type="text" id="inputAddress" placeholder="Ej: Av. San Martín 1540">
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="inputDate">Día / Fecha</label>
-        <input type="text" id="inputDate" placeholder="Ej: Sábado 15 de Noviembre">
-      </div>
-
-      <div class="form-group">
-        <label for="inputTime">Hora del festejo</label>
-        <input type="text" id="inputTime" placeholder="Ej: 17:30 hs">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="inputDate">Día / Fecha</label>
+          <input type="text" id="inputDate" placeholder="Ej: Sábado 15 de Noviembre">
+        </div>
+        <div class="form-group">
+          <label for="inputTime">Hora de inicio</label>
+          <input type="text" id="inputTime" placeholder="Ej: 18:00 hs">
+        </div>
       </div>
 
       <div class="btn-row">
@@ -91,36 +154,40 @@
     <!-- PANEL 3: Chequeo de Información -->
     <section id="panel3" class="panel">
       <h2>Revisa los datos 👀</h2>
-      <p class="panel-desc">Verifica que todo esté correcto antes de generar tu tarjeta</p>
+      <p class="panel-desc">Verifica la información antes de maquetar la tarjeta final</p>
 
       <div class="summary-card">
         <div class="summary-item">
-          <span class="summary-label">Cumpleañero/a:</span>
-          <span class="summary-val" id="sumName">-</span>
+          <span class="summary-label">Modelo:</span>
+          <span class="summary-val" id="sumModel">Cumpleaños</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Edad a cumplir:</span>
+          <span class="summary-label">Nombre:</span>
+          <span class="summary-val" id="sumName">-</span>
+        </div>
+        <div class="summary-item" id="sumAgeRow">
+          <span class="summary-label">Edad / Años:</span>
           <span class="summary-val" id="sumAge">-</span>
         </div>
         <div class="summary-item">
           <span class="summary-label">Foto:</span>
-          <span class="summary-val" id="sumPhotoStatus">Cargada</span>
+          <span class="summary-val" id="sumPhotoStatus">Sin foto</span>
         </div>
         <div class="summary-item">
           <span class="summary-label">Dirección:</span>
           <span class="summary-val" id="sumAddress">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Ciudad:</span>
-          <span class="summary-val" id="sumCity">-</span>
+          <span class="summary-label">Ciudad / Provincia:</span>
+          <span class="summary-val" id="sumCityProv">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Día:</span>
-          <span class="summary-val" id="sumDate">-</span>
+          <span class="summary-label">País:</span>
+          <span class="summary-val" id="sumCountry">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Hora:</span>
-          <span class="summary-val" id="sumTime">-</span>
+          <span class="summary-label">Fecha y Hora:</span>
+          <span class="summary-val" id="sumDateTime">-</span>
         </div>
       </div>
 
@@ -130,19 +197,19 @@
       </div>
     </section>
 
-    <!-- PANEL 4: Tarjeta Generada Scrolleable -->
+    <!-- PANEL 4: Tarjeta Scrolleable Final -->
     <section id="panel4" class="panel">
       
       <div class="card-scrollable">
         
         <!-- Foto destacada -->
         <div class="card-photo-hero">
-          <img id="cardHeroPhoto" src="" alt="Cumpleañero">
+          <img id="cardHeroPhoto" src="" alt="Festejado">
         </div>
 
         <div class="card-badge" id="cardAgeBadge">¡Cumple 5 Años!</div>
         <h1 class="card-title" id="cardNameTitle">Mateo</h1>
-        <p class="card-invite-msg">¡Te invito a celebrar mi cumpleaños! 🎈🍰</p>
+        <p class="card-invite-msg" id="cardHeadlineText">¡Te invito a celebrar juntos! 🎈🍰</p>
 
         <!-- Bloque Fecha y Hora -->
         <div class="card-grid-info">
@@ -152,18 +219,19 @@
           </div>
           <div class="grid-cell">
             <span>⏰ Horario</span>
-            <strong id="cardTimeText">17:30 hs</strong>
+            <strong id="cardTimeText">18:00 hs</strong>
           </div>
         </div>
 
-        <!-- Bloque Ubicación y Mapa a escala -->
+        <!-- Bloque Ubicación Geográfica con Escala de 3 Manzanas -->
         <div class="map-box">
-          <div class="map-location-title">📍 ¿Dónde es?</div>
-          <div class="map-address-text" id="cardAddressText">Av. Principal 1234</div>
-          <div class="map-city-text" id="cardCityText">Buenos Aires</div>
+          <div class="map-location-title">📍 ¿Dónde es el encuentro?</div>
+          <div class="map-address-text" id="cardAddressText">Av. San Martín 1540</div>
+          <div class="map-city-text" id="cardCityText">Rosario, Santa Fe (Argentina)</div>
 
+          <!-- Mapa Roadmap No Satelital (3 Manzanas) -->
           <div class="map-embed-wrapper">
-            <iframe id="cardMapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-58.385%2C-34.606%2C-58.378%2C-34.600&layer=mapnik&marker=-34.603%2C-58.3815"></iframe>
+            <iframe id="cardMapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-60.655%2C-32.955%2C-60.648%2C-32.948&layer=mapnik&marker=-32.9515%2C-60.6515"></iframe>
           </div>
 
           <a id="cardGmapsLink" href="#" target="_blank" class="btn-gmaps">
@@ -171,10 +239,10 @@
           </a>
         </div>
 
-        <!-- Reproductor de Música MP3 -->
+        <!-- Reproductor de Música -->
         <div class="audio-bar">
           <div class="audio-label">
-            <span>🎵 Música de Fiesta</span>
+            <span>🎵 Música de Celebración</span>
           </div>
           <button id="btnPlayMusic" class="btn-play-music" onclick="toggleAudio()">
             ▶️ Escuchar
@@ -186,14 +254,14 @@
           <source src="/audio/celebration.wav" type="audio/wav">
         </audio>
 
-        <!-- Bloque de Compra / Pago con PayPal Checkout v2 -->
+        <!-- Bloque de Compra con PayPal Checkout v2 -->
         <div class="paywall-block">
           <div class="price-box">
             <span>Precio de activación</span>
-            <strong id="displayPriceLabel">$5.00 USD</strong>
+            <strong>$5.00 USD</strong>
           </div>
 
-          <!-- Contenedor Oficial de Botones de PayPal (PayPal + Tarjetas de Crédito/Débito) -->
+          <!-- Botones oficiales de PayPal (PayPal + Tarjetas de Débito/Crédito) -->
           <div id="paypal-button-container" style="margin-top: 15px;"></div>
 
           <button class="btn btn-whatsapp" style="margin-top: 10px;" onclick="handleShareWhatsApp()">
@@ -203,7 +271,7 @@
           <!-- Estado del Pago en Tiempo Real -->
           <div id="cardStatusBox" class="status-box">
             <div id="statusSpinner" class="status-spinner"></div>
-            <div id="statusMsg" style="font-size: 13px; font-weight: 600; color: #ffffff;">Esperando acreditación en PayPal...</div>
+            <div id="statusMsg" style="font-size: 13px; font-weight: 600; color: #ffffff;">Esperando confirmación en PayPal...</div>
 
             <div id="unlockedActions" style="display: none; flex-direction: column; gap: 10px; margin-top: 14px;">
               <a id="btnOpenFinalCard" href="#" target="_blank" class="btn btn-primary">

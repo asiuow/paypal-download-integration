@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>¡Cumple de {{NAME}}! 🎉</title>
+  <title>{{NAME}} | Tarjeta de Invitación</title>
 
-  <!-- Metadatos OpenGraph universales para WhatsApp, Telegram, iMessage y redes -->
+  <!-- Metadatos OpenGraph para WhatsApp, Telegram, iMessage -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="🎉 ¡Estás invitado al cumpleaños de {{NAME}}!">
-  <meta property="og:description" content="🎂 Festejamos {{AGE}} años • 📅 {{DATE}} a las {{TIME}} • 📍 {{ADDRESS}}, {{CITY}}. ¡Toca para abrir la tarjeta interactiva!">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESC}}">
   <meta property="og:image" content="{{PHOTO}}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#ef4444">
+  <meta name="theme-color" content="{{THEME_COLOR}}">
 
   <style>
     * {
@@ -35,14 +35,14 @@
       position: relative;
     }
 
-    /* Fondo festivo suave */
+    /* Fondo ambiental */
     .confetti-bg {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 15%, rgba(239, 68, 68, 0.15) 0%, rgba(11, 11, 15, 0) 70%);
+      background: radial-gradient(circle at 50% 15%, {{THEME_COLOR}}22 0%, rgba(11, 11, 15, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -62,13 +62,13 @@
       margin: auto 0;
     }
 
-    /* Barra / Botón Flotante de Música */
+    /* Barra de Música */
     .music-bar-prompt {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      background: linear-gradient(135deg, {{THEME_COLOR}}, #f59e0b);
       color: #ffffff;
       padding: 10px 16px;
       border-radius: 30px;
@@ -76,7 +76,7 @@
       font-weight: 700;
       margin-bottom: 20px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 4px 15px {{THEME_COLOR}}66;
       animation: pulseBar 2s infinite ease-in-out;
       border: none;
       width: 100%;
@@ -87,15 +87,15 @@
       50% { transform: scale(1.02); }
     }
 
-    /* Foto del Cumpleañero/a */
+    /* Foto */
     .photo-wrapper {
       width: 140px;
       height: 140px;
       margin: 0 auto 16px;
       border-radius: 50%;
       padding: 4px;
-      background: linear-gradient(135deg, #ef4444, #f59e0b);
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+      background: linear-gradient(135deg, {{THEME_COLOR}}, #f59e0b);
+      box-shadow: 0 0 25px {{THEME_COLOR}}55;
     }
 
     .photo-img {
@@ -107,17 +107,16 @@
       display: block;
     }
 
-    .badge-age {
+    .badge-event {
       display: inline-block;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fca5a5;
+      background: {{THEME_COLOR}}22;
+      border: 1px solid {{THEME_COLOR}}55;
+      color: #ffffff;
       padding: 6px 16px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 10px;
     }
 
@@ -180,7 +179,7 @@
     .location-header {
       font-size: 14px;
       font-weight: 700;
-      color: #ef4444;
+      color: {{THEME_COLOR}};
       margin-bottom: 6px;
     }
 
@@ -261,7 +260,7 @@
 
   <div class="confetti-bg"></div>
 
-  <!-- Audio nativo HTML5 con fuentes cruzadas -->
+  <!-- Audio nativo HTML5 -->
   <audio id="bgAudio" loop preload="auto">
     <source src="/audio/celebration.mp3" type="audio/mpeg">
     <source src="/audio/celebration.wav" type="audio/wav">
@@ -269,20 +268,20 @@
 
   <main class="card-container">
     
-    <!-- Barra de control y activación de música para móviles -->
+    <!-- Barra de control de música -->
     <button id="btnMusicBar" class="music-bar-prompt" onclick="toggleMusic()">
       <span id="musicIcon">🎵</span>
       <span id="musicText">Toca aquí para escuchar la música</span>
     </button>
 
-    <!-- Foto del Cumpleañero/a -->
+    <!-- Foto -->
     <div class="photo-wrapper">
       <img id="cardPhoto" src="{{PHOTO}}" alt="{{NAME}}" class="photo-img" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23ef4444\'/><text x=\'50\' y=\'65\' font-size=\'40\' text-anchor=\'middle\' fill=\'white\'>🎉</text></svg>'">
     </div>
 
-    <div class="badge-age">¡Cumple {{AGE}} Años!</div>
+    <div class="badge-event">{{BADGE_TEXT}}</div>
     <h1>{{NAME}}</h1>
-    <p class="invite-text">¡Te invito a festejar mi cumpleaños juntos! 🎂🎈</p>
+    <p class="invite-text">{{HEADLINE_TEXT}}</p>
 
     <!-- Información de Fecha y Hora -->
     <div class="info-grid">
@@ -296,19 +295,19 @@
       </div>
     </div>
 
-    <!-- Ubicación y Mapa a escala de 3 manzanas -->
+    <!-- Ubicación y Mapa Georreferenciado a Escala de 3 Manzanas -->
     <div class="location-box">
       <div class="location-header">
-        <span>📍 ¿Dónde festejamos?</span>
+        <span>📍 ¿Dónde es el encuentro?</span>
       </div>
       <div class="location-address">{{ADDRESS}}</div>
-      <div class="location-city">{{CITY}}</div>
+      <div class="location-city">{{CITY}}, {{PROVINCE}} ({{COUNTRY}})</div>
 
       <div class="map-frame">
         <iframe id="mapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-58.385%2C-34.606%2C-58.378%2C-34.600&layer=mapnik&marker=-34.603%2C-58.3815"></iframe>
       </div>
 
-      <a id="googleMapsBtn" href="https://www.google.com/maps/search/?api=1&query={{ADDRESS}},%20{{CITY}}" target="_blank" class="btn-maps">
+      <a id="googleMapsBtn" href="https://www.google.com/maps/search/?api=1&query={{MAPS_QUERY_ENCODED}}" target="_blank" class="btn-maps">
         🗺️ Abrir en Google Maps / GPS
       </a>
     </div>
@@ -334,7 +333,7 @@
       if (isPlaying) {
         audio.pause();
         musicIcon.innerText = '▶️';
-        musicText.innerText = 'Reproducir música de fiesta';
+        musicText.innerText = 'Reproducir música';
         isPlaying = false;
       } else {
         audio.play().then(() => {
@@ -347,8 +346,6 @@
       }
     }
 
-    // Compatibilidad universal con navegadores móviles (iOS Safari, Android Chrome):
-    // El primer toque en la pantalla activa el audio si el usuario lo desea
     document.addEventListener('touchstart', function playOnce() {
       if (!isPlaying) {
         audio.play().then(() => {
@@ -360,18 +357,21 @@
       document.removeEventListener('touchstart', playOnce);
     }, { once: true });
 
-    // Geocodificación dinámica a escala de 3 manzanas
+    // Geocodificación precisa con País, Provincia, Ciudad y Calle (Escala exacta de 3 manzanas)
     const address = "{{ADDRESS}}";
     const city = "{{CITY}}";
+    const province = "{{PROVINCE}}";
+    const country = "{{COUNTRY}}";
+    
     if (address && city) {
-      const query = encodeURIComponent(address + ', ' + city);
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+      const fullQuery = encodeURIComponent(`${address}, ${city}, ${province}, ${country}`);
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${fullQuery}`)
         .then(r => r.json())
         .then(data => {
           if (data && data.length > 0) {
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
-            const delta = 0.0025; // 3 manzanas (~250-300m)
+            const delta = 0.0025; // Escala exacta de 3 manzanas (~250-300m)
             const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
             document.getElementById('mapFrame').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
           }
@@ -380,7 +380,7 @@
     }
 
     function shareInvitation() {
-      const text = encodeURIComponent(`🎂 ¡Hola! Te invito al cumpleaños de {{NAME}} ({{AGE}} años) 🎉\n📅 Día: {{DATE}} a las {{TIME}}\n📍 Lugar: {{ADDRESS}}, {{CITY}}\n\n🌟 Toca el enlace para ver la tarjeta interactiva con música y mapa:\n${window.location.href}`);
+      const text = encodeURIComponent(`{{SHARE_SHORT_TEXT}}\n${window.location.href}`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
   </script>

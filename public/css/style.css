@@ -9,7 +9,7 @@
   --text-muted: #9ca3af;
   --border: #282836;
   --whatsapp: #25d366;
-  --radius: 18px;
+  --radius: 20px;
 }
 
 * {
@@ -24,11 +24,12 @@ body {
   color: var(--text-main);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 24px 14px 50px;
+  padding: 20px 14px 40px;
   overflow-x: hidden;
 }
 
@@ -44,7 +45,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .step-dot {
@@ -68,9 +69,9 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px 20px;
+  padding: 26px 18px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.25s ease;
 }
 
 .panel.active {
@@ -78,7 +79,7 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -94,19 +95,105 @@ h2 {
   font-size: 13px;
   color: var(--text-muted);
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
-/* Formularios e Inputs */
+/* ========================================================
+   ABANICO DE 4 CARTAS SUPERPUESTAS (HOME)
+   ======================================================== */
+.fan-scene {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin: 10px auto 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+}
+
+.fan-card {
+  position: absolute;
+  width: 150px;
+  height: 175px;
+  border-radius: 16px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+/* Colores y Rotaciones en Abanico */
+.fan-card.card-cumple {
+  background: linear-gradient(145deg, #ef4444, #991b1b);
+  transform: rotate(-18deg) translate(-55px, 10px);
+  z-index: 1;
+}
+
+.fan-card.card-bautismo {
+  background: linear-gradient(145deg, #0ea5e9, #0369a1);
+  transform: rotate(-6deg) translate(-20px, 0px);
+  z-index: 2;
+}
+
+.fan-card.card-asado {
+  background: linear-gradient(145deg, #f97316, #c2410c);
+  transform: rotate(6deg) translate(20px, 0px);
+  z-index: 3;
+}
+
+.fan-card.card-evento {
+  background: linear-gradient(145deg, #8b5cf6, #5b21b6);
+  transform: rotate(18deg) translate(55px, 10px);
+  z-index: 4;
+}
+
+/* Al tocar una carta pasa al frente destacada */
+.fan-card.active-front {
+  transform: rotate(0deg) translate(0px, -22px) scale(1.18) !important;
+  z-index: 50 !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.35) !important;
+  border-color: #ffffff !important;
+}
+
+.fan-card-icon {
+  font-size: 38px;
+  margin-bottom: 8px;
+}
+
+.fan-card-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.fan-card-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+}
+
+/* ========================================================
+   FORMULARIOS E INPUTS
+   ======================================================== */
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   text-align: left;
 }
 
 label {
   display: block;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   color: #d1d5db;
   margin-bottom: 6px;
@@ -115,21 +202,30 @@ label {
 
 input[type="text"],
 input[type="number"],
-input[type="date"],
-input[type="time"] {
+select {
   width: 100%;
   background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 13px 14px;
+  padding: 12px 14px;
   font-size: 15px;
   color: var(--text-main);
   outline: none;
   transition: border-color 0.2s;
 }
 
-input:focus {
+select {
+  cursor: pointer;
+}
+
+input:focus, select:focus {
   border-color: var(--primary);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .char-counter {
@@ -143,13 +239,12 @@ input:focus {
 .photo-uploader {
   border: 2px dashed #3a3a4c;
   border-radius: 14px;
-  padding: 18px;
+  padding: 16px;
   text-align: center;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.02);
   transition: all 0.2s;
-  margin-bottom: 20px;
-  position: relative;
+  margin-bottom: 16px;
 }
 
 .photo-uploader:hover {
@@ -158,10 +253,10 @@ input:focus {
 }
 
 .photo-preview-box {
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
-  margin: 0 auto 10px;
+  margin: 0 auto 8px;
   overflow: hidden;
   border: 2px solid var(--primary);
   display: flex;
@@ -188,11 +283,11 @@ input:focus {
   margin-top: 2px;
 }
 
-/* Botones de Navegación */
+/* Botones */
 .btn-row {
   display: flex;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 22px;
 }
 
 .btn {
@@ -227,10 +322,6 @@ input:focus {
   border: 1px solid var(--border);
 }
 
-.btn-secondary:hover {
-  background: #2b2b3a;
-}
-
 .btn-whatsapp {
   background: var(--whatsapp);
   color: #ffffff;
@@ -244,12 +335,12 @@ input:focus {
   margin-top: 14px;
 }
 
-/* Panel 3: Chequeo de Datos */
+/* Resumen Panel 3 */
 .summary-card {
   background: #1b1b26;
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 14px 16px;
   margin-bottom: 20px;
   text-align: left;
 }
@@ -259,7 +350,7 @@ input:focus {
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid #282838;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .summary-item:last-child {
@@ -276,12 +367,12 @@ input:focus {
   text-align: right;
 }
 
-/* Panel 4: Tarjeta Scrolleable Final */
+/* Tarjeta Scrolleable Final */
 .card-scrollable {
   background: #14141c;
   border: 1px solid #282836;
   border-radius: 28px;
-  padding: 30px 18px 24px;
+  padding: 28px 18px 24px;
   text-align: center;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
@@ -290,7 +381,7 @@ input:focus {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  margin: 0 auto 16px;
+  margin: 0 auto 14px;
   padding: 4px;
   background: linear-gradient(135deg, var(--primary), var(--accent));
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
@@ -312,13 +403,14 @@ input:focus {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .card-title {
   font-size: 28px;
   font-weight: 900;
   margin-bottom: 6px;
+  word-break: break-word;
 }
 
 .card-invite-msg {
@@ -354,7 +446,7 @@ input:focus {
   color: #ffffff;
 }
 
-/* Mapa en tarjeta */
+/* Bloque Mapa Georreferenciado */
 .map-box {
   background: #1c1c26;
   border: 1px solid var(--border);
@@ -413,7 +505,7 @@ input:focus {
   text-decoration: none;
 }
 
-/* Reproductor de Música */
+/* Música */
 .audio-bar {
   background: #1c1c26;
   border: 1px solid var(--border);

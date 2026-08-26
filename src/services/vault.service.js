@@ -4,47 +4,86 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const TEMPLATE_FILE = path.join(__dirname, '../vault/product-app.html');
+const VAULT_FILE_PATH = path.join(__dirname, '../vault/product-app.html');
 
 export const vaultService = {
-  /**
-   * Genera el HTML protegido de la tarjeta final inyectando los datos de la orden aprobada
-   */
-  getProtectedProductContent(orderId, order) {
-    if (!fs.existsSync(TEMPLATE_FILE)) {
-      throw new Error('Plantilla protegida no encontrada en la bóveda.');
+  getProtectedProductContent(orderId, order = {}) {
+    if (!fs.existsSync(VAULT_FILE_PATH)) {
+      throw new Error('Plantilla de tarjeta no encontrada en la bóveda.');
     }
 
-    let html = fs.readFileSync(TEMPLATE_FILE, 'utf8');
-    const cardData = order?.cardData || {};
+    let content = fs.readFileSync(VAULT_FILE_PATH, 'utf8');
+    const card = order.cardData || {
+      eventType: 'cumpleanos',
+      name: 'Festejado',
+      age: '5',
+      photo: '',
+      address: 'Av. Corrientes 1234',
+      city: 'Buenos Aires',
+      province: 'Buenos Aires',
+      country: 'Argentina',
+      date: 'Sábado',
+      time: '18:00 hs'
+    };
 
-    const name = cardData.name || 'Cumpleañero';
-    const age = cardData.age || '5';
-    const photo = cardData.photo || '';
-    const address = cardData.address || 'Av. Principal 123';
-    const city = cardData.city || 'Ciudad';
-    const date = cardData.date || 'Sábado';
-    const time = cardData.time || '18:00 hs';
+    const eventLabels = {
+      'cumpleanos': {
+        ogTitle: 'Te invito a mi cumple 🎉',
+        ogDesc: 'Toca para ver la invitación',
+        shareText: 'Te invito a mi cumple 🎉',
+        badge: card.age ? `¡Cumple ${card.age} Años!` : '¡Feliz Cumpleaños!',
+        headline: '¡Te invito a festejar mi cumpleaños juntos! 🎂🎈',
+        themeColor: '#ef4444'
+      },
+      'bautismo': {
+        ogTitle: 'Te invito a mi bautismo 🕊️',
+        ogDesc: 'Toca para ver la invitación',
+        shareText: 'Te invito a mi bautismo 🕊️',
+        badge: 'Mi Bautismo 🕊️',
+        headline: 'Te invito a compartir este momento tan especial y bendecido ✨',
+        themeColor: '#0ea5e9'
+      },
+      'asado': {
+        ogTitle: 'Te invito a un asado 🥩',
+        ogDesc: 'Toca para ver la invitación',
+        shareText: 'Te invito a un asado 🥩',
+        badge: '¡Gran Asado! 🥩🔥',
+        headline: '¡Se prende el fuego! Te invito a compartir un gran asado 🍷',
+        themeColor: '#f97316'
+      },
+      'evento': {
+        ogTitle: 'Te invito a mi evento 🥂',
+        ogDesc: 'Toca para ver la invitación',
+        shareText: 'Te invito a mi evento 🥂',
+        badge: 'Evento Especial 🌟',
+        headline: '¡Estás cordialmente invitado a celebrar con nosotros! 🥂',
+        themeColor: '#8b5cf6'
+      }
+    };
 
-    // Remplazar variables en la plantilla protegida
-    html = html.replaceAll('{{NAME}}', escapeHtml(name));
-    html = html.replaceAll('{{AGE}}', escapeHtml(age));
-    html = html.replaceAll('{{PHOTO}}', photo);
-    html = html.replaceAll('{{ADDRESS}}', escapeHtml(address));
-    html = html.replaceAll('{{CITY}}', escapeHtml(city));
-    html = html.replaceAll('{{DATE}}', escapeHtml(date));
-    html = html.replaceAll('{{TIME}}', escapeHtml(time));
-    html = html.replaceAll('{{ORDER_ID}}', orderId);
+    const currentEvent = eventLabels[card.eventType] || eventLabels['cumpleanos'];
+    const mapsQueryEncoded = encodeURIComponent(`${card.address}, ${card.city}, ${card.province}, ${card.country}`);
 
-    return html;
+    content = content
+      .replace(/{{NAME}}/g, card.name || 'Festejado')
+      .replace(/{{AGE}}/g, card.age || '')
+      .replace(/{{PHOTO}}/g, card.photo || '')
+      .replace(/{{ADDRESS}}/g, card.address || 'Av. Principal 123')
+      .replace(/{{CITY}}/g, card.city || 'Buenos Aires')
+      .replace(/{{PROVINCE}}/g, card.province || 'Buenos Aires')
+      .replace(/{{COUNTRY}}/g, card.country || 'Argentina')
+      .replace(/{{MAPS_QUERY_ENCODED}}/g, mapsQueryEncoded)
+      .replace(/{{DATE}}/g, card.date || 'Sábado')
+      .replace(/{{TIME}}/g, card.time || '18:00 hs')
+      .replace(/{{EVENT_TYPE}}/g, card.eventType || 'cumpleanos')
+      .replace(/{{OG_TITLE}}/g, currentEvent.ogTitle)
+      .replace(/{{OG_DESC}}/g, currentEvent.ogDesc)
+      .replace(/{{SHARE_SHORT_TEXT}}/g, currentEvent.shareText)
+      .replace(/{{BADGE_TEXT}}/g, currentEvent.badge)
+      .replace(/{{HEADLINE_TEXT}}/g, currentEvent.headline)
+      .replace(/{{THEME_COLOR}}/g, currentEvent.themeColor)
+      .replace(/{{ORDER_ID}}/g, orderId ? orderId.slice(0, 8) : 'VERIFIED');
+
+    return content;
   }
 };
-
-function escapeHtml(string) {
-  return String(string)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
