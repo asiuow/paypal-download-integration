@@ -264,21 +264,17 @@
           <!-- Botones oficiales de PayPal (PayPal + Tarjetas de Débito/Crédito) -->
           <div id="paypal-button-container" style="margin-top: 15px;"></div>
 
-          <button class="btn btn-whatsapp" style="margin-top: 10px;" onclick="handleShareWhatsApp()">
-            📲 Compartir en WhatsApp
-          </button>
-
           <!-- Estado del Pago en Tiempo Real -->
           <div id="cardStatusBox" class="status-box">
             <div id="statusSpinner" class="status-spinner"></div>
             <div id="statusMsg" style="font-size: 13px; font-weight: 600; color: #ffffff;">Esperando confirmación en PayPal...</div>
 
-            <div id="unlockedActions" style="display: none; flex-direction: column; gap: 10px; margin-top: 14px;">
+            <div id="unlockedActions" style="display: none; flex-direction: column; gap: 12px; margin-top: 16px;">
               <a id="btnOpenFinalCard" href="#" target="_blank" class="btn btn-primary">
                 🌟 Abrir Tarjeta Oficial con Música
               </a>
-              <button class="btn btn-whatsapp" onclick="handleShareFinalInvitation()">
-                📲 Enviar Invitación a Contactos
+              <button class="btn-whatsapp-3d" onclick="handleShareFinalInvitation()">
+                📲 COMPARTIR EN WHATSAPP
               </button>
             </div>
           </div>

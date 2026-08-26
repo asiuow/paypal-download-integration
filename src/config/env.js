@@ -9,8 +9,8 @@ export const config = {
   vaultSecret: process.env.VAULT_SECRET_KEY || 'boveda_paypal_secret_key_fixed_2026_super_secure',
   paypal: {
     mode: process.env.PAYPAL_MODE || 'sandbox',
-    clientId: process.env.PAYPAL_CLIENT_ID || '',
-    clientSecret: process.env.PAYPAL_CLIENT_SECRET || ''
+    clientId: process.env.PAYPAL_CLIENT_ID || 'AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KlQEhTXEv8BYTxV94AYpDyORpT0vm_t9',
+    clientSecret: process.env.PAYPAL_CLIENT_SECRET || 'EKh96fGs1W-N6Z8DNZMFo8tKmDyUHi6uUOXGoO72UWoSCaX3b-jL3-TiJayXIe0H4xCbXEhiFMZJkXMN'
   },
   item: {
     id: 'prod-digital-card-01',
