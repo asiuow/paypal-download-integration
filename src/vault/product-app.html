@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>{{OG_TITLE}} | Invitación</title>
+  <title>{{OG_TITLE}} | Invitation</title>
   
   <meta property="og:title" content="{{OG_TITLE}}">
   <meta property="og:description" content="{{OG_DESC}}">
@@ -222,7 +222,7 @@
       text-decoration: none;
     }
 
-    /* Botón 3D Verde Plástico con Letras en Bajo Relieve */
+    /* 3D Green Plastic Button with Debossed Letters */
     .btn-whatsapp-3d {
       width: 100%;
       display: flex;
@@ -283,7 +283,7 @@
   <main class="card-container">
     
     <button id="btnMusicBar" class="music-bar-prompt" onclick="toggleMusic()">
-      <span id="musicText">Toca aquí para escuchar la música</span>
+      <span id="musicText">Tap here to play music</span>
     </button>
 
     <div class="photo-wrapper">
@@ -297,37 +297,37 @@
 
     <div class="info-grid">
       <div class="info-card">
-        <span>Día</span>
+        <span>Date</span>
         <strong>{{DATE}}</strong>
       </div>
       <div class="info-card">
-        <span>Horario</span>
+        <span>Time</span>
         <strong>{{TIME}}</strong>
       </div>
     </div>
 
     <div class="location-box">
       <div class="location-header">
-        <span>¿Dónde es el encuentro?</span>
+        <span>Where is the event?</span>
       </div>
       <div class="location-address">{{ADDRESS}}</div>
-      <div class="location-city">{{CITY}}, {{PROVINCE}} ({{COUNTRY}})</div>
+      <div class="location-city">{{CITY}}, {{PROVINCE}} {{ZIP_CODE}} ({{COUNTRY}})</div>
 
       <div class="map-frame">
-        <iframe id="mapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-58.385%2C-34.606%2C-58.378%2C-34.600&layer=mapnik&marker=-34.603%2C-58.3815"></iframe>
+        <iframe id="mapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-123.03%2C44.04%2C-122.99%2C44.06&layer=mapnik"></iframe>
       </div>
 
       <a id="googleMapsBtn" href="https://www.google.com/maps/search/?api=1&query={{MAPS_QUERY_ENCODED}}" target="_blank" class="btn-maps">
-        Abrir en Google Maps / GPS
+        Open in Google Maps / GPS
       </a>
     </div>
 
     <button class="btn-whatsapp-3d" onclick="shareInvitation()">
-      COMPARTIR EN WHATSAPP
+      SHARE ON WHATSAPP
     </button>
 
     <footer>
-      Invitación Digital Interactiva
+      Interactive Digital Invitation
     </footer>
 
   </main>
@@ -341,20 +341,20 @@
       if (isPlaying) {
         audio.pause();
         isPlaying = false;
-        musicText.innerText = 'Toca para reanudar música';
+        musicText.innerText = 'Tap to resume music';
       } else {
         audio.play().then(() => {
           isPlaying = true;
-          musicText.innerText = 'Música sonando... Toca para pausar';
+          musicText.innerText = 'Music playing... Tap to pause';
         }).catch(() => {
-          musicText.innerText = 'Toca aquí para escuchar la música';
+          musicText.innerText = 'Tap here to play music';
         });
       }
     }
 
     function shareInvitation() {
       const shareUrl = window.location.href;
-      const text = encodeURIComponent("Hola, te comparto la invitacion:\n" + shareUrl);
+      const text = encodeURIComponent("Hi, here is the invitation:\n" + shareUrl);
       window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
     }
 
@@ -362,7 +362,7 @@
       if (!isPlaying) {
         audio.play().then(() => {
           isPlaying = true;
-          musicText.innerText = 'Música sonando... Toca para pausar';
+          musicText.innerText = 'Music playing... Tap to pause';
         }).catch(() => {});
       }
       window.removeEventListener('click', initPlay);

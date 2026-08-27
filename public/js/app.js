@@ -4,73 +4,74 @@ let pollInterval = null;
 let unlockedCardUrl = null;
 let isAudioPlaying = false;
 
-// Estado de la tarjeta
+// Card State
 const cardState = {
   eventType: 'cumpleanos',
   name: '',
   age: '',
   photo: '',
-  country: 'Argentina',
-  province: '',
-  city: '',
   address: '',
+  city: '',
+  province: '', // State
+  zipCode: '',
+  country: 'United States',
   date: '',
   time: ''
 };
 
-// Modelos disponibles (Sin emojis al lado del texto)
+// Available Templates (No text emojis)
 const eventModelConfig = {
   'cumpleanos': {
-    title: '1. Cumpleaños',
-    h2: '¿Quién cumple años?',
-    desc: 'Ingresa los datos del cumpleañero/a',
-    labelName: 'Nombre del cumpleañero/a',
-    labelAge: '¿Cuántos años cumple?',
+    title: '1. Birthday',
+    h2: 'Who is celebrating?',
+    desc: "Enter the birthday person's details",
+    labelName: 'Full name or nickname',
+    labelAge: 'Age celebrating',
     showAge: true,
-    badgeDefault: '¡Cumple {age} Años!',
-    headline: '¡Te invito a celebrar mi cumpleaños juntos!',
-    shareText: 'Te invito a mi cumple',
+    badgeDefault: 'Turning {age}!',
+    headline: 'You are invited to celebrate together!',
+    shareText: 'You are invited to my birthday',
     color: '#ef4444'
   },
   'bautismo': {
-    title: '2. Bautismo',
-    h2: '¿Quién se bautiza?',
-    desc: 'Ingresa los datos para la bendición',
-    labelName: 'Nombre del bautizado/a',
-    labelAge: 'Edad o fecha especial (opcional)',
+    title: '2. Baptism',
+    h2: 'Who is being baptized?',
+    desc: 'Enter baptism and ceremony details',
+    labelName: 'Name of person baptized',
+    labelAge: 'Special note (optional)',
     showAge: false,
-    badgeDefault: 'Mi Bautismo',
-    headline: 'Te invito a compartir este momento tan especial y bendecido',
-    shareText: 'Te invito a mi bautismo',
+    badgeDefault: 'Holy Baptism',
+    headline: 'Join us in celebrating this sacred and blessed milestone',
+    shareText: 'You are invited to my baptism',
     color: '#0ea5e9'
   },
   'asado': {
-    title: '3. Asado',
-    h2: '¿Quién invita al asado?',
-    desc: 'Detalles del anfitrión o motivo del asado',
-    labelName: 'Nombre del asador / anfitrión',
-    labelAge: 'Motivo del asado (opcional)',
+    title: '3. Barbecue',
+    h2: 'Who is hosting the grill?',
+    desc: 'Host details and gathering info',
+    labelName: 'Host or grill master name',
+    labelAge: 'Gathering note (optional)',
     showAge: false,
-    badgeDefault: '¡Gran Asado!',
-    headline: '¡Se prende el fuego! Te invito a compartir un gran asado',
-    shareText: 'Te invito a un asado',
+    badgeDefault: 'Great Barbecue!',
+    headline: 'The grill is fired up! Come enjoy good food and friends',
+    shareText: 'You are invited to a barbecue',
     color: '#f97316'
   },
   'evento': {
-    title: '4. Evento Especial',
-    h2: '¿Nombre del evento o anfitrión?',
-    desc: 'Celebraciones, fiestas privadas o aniversarios',
-    labelName: 'Nombre del evento / anfitrión',
-    labelAge: 'Detalle adicional (opcional)',
+    title: '4. Special Event',
+    h2: 'Event title or host name?',
+    desc: 'Party, anniversary, or special occasion',
+    labelName: 'Host or event name',
+    labelAge: 'Event details (optional)',
     showAge: false,
-    badgeDefault: 'Evento Especial',
-    headline: 'Estás cordialmente invitado a celebrar con nosotros',
-    shareText: 'Te invito a mi evento',
+    badgeDefault: 'Special Celebration',
+    headline: 'You are cordially invited to celebrate with us',
+    shareText: 'You are invited to my event',
     color: '#8b5cf6'
   }
 };
 
-// Elementos DOM
+// DOM Elements
 const audioEl = document.getElementById('previewAudio');
 const btnPlayMusic = document.getElementById('btnPlayMusic');
 const toastEl = document.getElementById('toast');
@@ -83,9 +84,9 @@ function showToast(msg) {
 }
 
 /**
- * Pop-up Modal Estilo Mercado Pago (Fondo blanco, esquinas redondeadas, gris bold)
+ * Clean Modal Pop-Up (White background, rounded corners, bold gray text)
  */
-function showFunModal({ title = 'Un momento', text = '' }) {
+function showFunModal({ title = 'Please Note', text = '' }) {
   const titleEl = document.getElementById('funModalTitle');
   const textEl = document.getElementById('funModalText');
   const overlayEl = document.getElementById('funModalOverlay');
@@ -106,7 +107,7 @@ function handleFunModalOverlayClick(event) {
 }
 
 /**
- * Selección interactiva de carta en el Abanico de la Home
+ * Interactive Fan Card Selection on Home
  */
 function selectFanCard(type, el) {
   cardState.eventType = type;
@@ -128,7 +129,7 @@ function selectFanCard(type, el) {
 }
 
 /**
- * Contador de caracteres del nombre (Máx 20 letras)
+ * Character counter for name input (Max 20 chars)
  */
 function updateCharCount() {
   const input = document.getElementById('inputName');
@@ -137,7 +138,7 @@ function updateCharCount() {
 }
 
 /**
- * Cargar, comprimir y optimizar foto para móviles (Canvas max 800x800)
+ * Upload and compress mobile photo (Canvas max 800x800)
  */
 function handlePhotoUpload(event) {
   const file = event.target.files[0];
@@ -171,8 +172,8 @@ function handlePhotoUpload(event) {
       document.getElementById('imgPreview').src = cardState.photo;
       document.getElementById('imgPreview').style.display = 'block';
       document.getElementById('photoIcon').style.display = 'none';
-      document.getElementById('uploaderText').innerText = 'Foto lista';
-      document.getElementById('sumPhotoStatus').innerText = 'Cargada y Optimizada';
+      document.getElementById('uploaderText').innerText = 'Photo ready';
+      document.getElementById('sumPhotoStatus').innerText = 'Uploaded and optimized';
     };
     img.src = e.target.result;
   };
@@ -180,7 +181,7 @@ function handlePhotoUpload(event) {
 }
 
 /**
- * Navegación entre pasos del Asistente
+ * Wizard Step Navigation
  */
 function goToStep(step) {
   if (step === 2 && currentStep === 1) {
@@ -189,11 +190,11 @@ function goToStep(step) {
     const cfg = eventModelConfig[cardState.eventType];
 
     if (!name) {
-      showFunModal({ title: 'Dato requerido', text: 'Por favor ingresa el nombre.' });
+      showFunModal({ title: 'Field Required', text: 'Please enter a name or nickname.' });
       return;
     }
     if (cfg.showAge && !age) {
-      showFunModal({ title: 'Dato requerido', text: 'Por favor ingresa los años que cumple.' });
+      showFunModal({ title: 'Field Required', text: 'Please enter the age celebrating.' });
       return;
     }
 
@@ -202,26 +203,32 @@ function goToStep(step) {
   }
 
   if (step === 3 && currentStep === 2) {
-    const country = document.getElementById('inputCountry').value.trim() || 'Argentina';
-    const province = document.getElementById('inputProvince').value.trim();
-    const city = document.getElementById('inputCity').value.trim();
     const address = document.getElementById('inputAddress').value.trim();
+    const city = document.getElementById('inputCity').value.trim();
+    const province = document.getElementById('inputProvince').value.trim();
+    const zipCode = document.getElementById('inputZip').value.trim();
+    const country = document.getElementById('inputCountry').value.trim() || 'United States';
     const date = document.getElementById('inputDate').value.trim();
     const time = document.getElementById('inputTime').value.trim();
 
     if (!address || !city) {
-      showFunModal({ title: 'Ubicación requerida', text: 'Por favor completa la dirección y localidad.' });
+      showFunModal({ title: 'Location Required', text: 'Please enter street address and city.' });
+      return;
+    }
+    if (!province) {
+      showFunModal({ title: 'State Required', text: 'Please enter the state.' });
       return;
     }
     if (!date || !time) {
-      showFunModal({ title: 'Horario requerido', text: 'Por favor ingresa el día y la hora del encuentro.' });
+      showFunModal({ title: 'Schedule Required', text: 'Please enter the event date and start time.' });
       return;
     }
 
-    cardState.country = country;
-    cardState.province = province;
-    cardState.city = city;
     cardState.address = address;
+    cardState.city = city;
+    cardState.province = province;
+    cardState.zipCode = zipCode;
+    cardState.country = country;
     cardState.date = date;
     cardState.time = time;
 
@@ -229,9 +236,10 @@ function goToStep(step) {
     document.getElementById('sumModel').innerText = cfg.title;
     document.getElementById('sumName').innerText = cardState.name;
     document.getElementById('sumAgeRow').style.display = cfg.showAge ? 'flex' : 'none';
-    document.getElementById('sumAge').innerText = cardState.age ? `${cardState.age} años` : '-';
+    document.getElementById('sumAge').innerText = cardState.age ? `${cardState.age} years` : '-';
     document.getElementById('sumAddress').innerText = cardState.address;
-    document.getElementById('sumCityProv').innerText = cardState.province ? `${cardState.city}, ${cardState.province}` : cardState.city;
+    document.getElementById('sumCityProv').innerText = `${cardState.city}, ${cardState.province}`;
+    document.getElementById('sumZip').innerText = cardState.zipCode || '-';
     document.getElementById('sumCountry').innerText = cardState.country;
     document.getElementById('sumDateTime').innerText = `${cardState.date} - ${cardState.time}`;
   }
@@ -252,7 +260,7 @@ function goToStep(step) {
 }
 
 /**
- * Generar vista previa de la tarjeta
+ * Generate Card Preview
  */
 function generateCardPreview() {
   const cfg = eventModelConfig[cardState.eventType];
@@ -260,7 +268,7 @@ function generateCardPreview() {
   document.getElementById('cardNameTitle').innerText = cardState.name;
 
   if (cardState.eventType === 'cumpleanos' && cardState.age) {
-    document.getElementById('cardAgeBadge').innerText = `¡Cumple ${cardState.age} Años!`;
+    document.getElementById('cardAgeBadge').innerText = `Turning ${cardState.age}!`;
   } else {
     document.getElementById('cardAgeBadge').innerText = cfg.badgeDefault;
   }
@@ -272,6 +280,7 @@ function generateCardPreview() {
 
   let cityText = cardState.city;
   if (cardState.province) cityText += `, ${cardState.province}`;
+  if (cardState.zipCode) cityText += ` ${cardState.zipCode}`;
   if (cardState.country) cityText += ` (${cardState.country})`;
   document.getElementById('cardCityText').innerText = cityText;
 
@@ -286,6 +295,7 @@ function generateCardPreview() {
   let fullLocation = cardState.address;
   if (cardState.city) fullLocation += `, ${cardState.city}`;
   if (cardState.province) fullLocation += `, ${cardState.province}`;
+  if (cardState.zipCode) fullLocation += ` ${cardState.zipCode}`;
   if (cardState.country) fullLocation += `, ${cardState.country}`;
 
   const query = encodeURIComponent(fullLocation);
@@ -295,27 +305,26 @@ function generateCardPreview() {
 }
 
 /**
- * Reproductor de audio
+ * Audio Player Control
  */
 function toggleAudio() {
   if (isAudioPlaying) {
     audioEl.pause();
     isAudioPlaying = false;
-    btnPlayMusic.innerText = 'Escuchar';
+    btnPlayMusic.innerText = 'Play';
   } else {
     audioEl.play().then(() => {
       isAudioPlaying = true;
-      btnPlayMusic.innerText = 'Pausar';
+      btnPlayMusic.innerText = 'Pause';
     }).catch(() => {
-      btnPlayMusic.innerText = 'Escuchar';
+      btnPlayMusic.innerText = 'Play';
     });
   }
 }
 
 /**
- * Iniciar Pago con PayPal ($5.00 USD)
- * Método idéntico a Mercado Pago: abre pestaña limpia con window.open,
- * sin popups dobles ni about:blank.
+ * Start PayPal Payment ($5.00 USD)
+ * Clean tab method: opens official PayPal checkout in a clean tab with window.open
  */
 async function handlePayPayPal() {
   const btn = document.getElementById('btnPayPayPal');
@@ -327,7 +336,7 @@ async function handlePayPayPal() {
   const statusBox = document.getElementById('cardStatusBox');
   statusBox.style.display = 'block';
   document.getElementById('statusSpinner').style.display = 'block';
-  document.getElementById('statusMsg').innerText = 'Iniciando checkout en PayPal...';
+  document.getElementById('statusMsg').innerText = 'Starting secure checkout with PayPal...';
 
   try {
     const res = await fetch('/api/paypal/create-order', {
@@ -340,8 +349,8 @@ async function handlePayPayPal() {
 
     if (!data.success || !data.approveUrl) {
       showFunModal({
-        title: 'Un momento',
-        text: data.error || 'No se pudo generar la orden de pago. Por favor intenta de nuevo.'
+        title: 'Please Note',
+        text: data.error || 'Could not initiate PayPal checkout. Please try again.'
       });
       if (btn) {
         btn.disabled = false;
@@ -353,7 +362,7 @@ async function handlePayPayPal() {
     currentOrderId = data.orderId;
     startCardPolling(currentOrderId);
 
-    // Abrir pasarela en pestaña limpia (método Mercado Pago)
+    // Open PayPal checkout in a clean tab
     window.open(data.approveUrl, '_blank');
 
     if (btn) {
@@ -362,8 +371,8 @@ async function handlePayPayPal() {
     }
   } catch (err) {
     showFunModal({
-      title: 'Conexión interrumpida',
-      text: 'No pudimos comunicarnos con el servidor. Revisa tu conexión.'
+      title: 'Connection Issue',
+      text: 'Unable to reach the server. Please check your connection and try again.'
     });
     if (btn) {
       btn.disabled = false;
@@ -373,7 +382,7 @@ async function handlePayPayPal() {
 }
 
 /**
- * Polling de verificación en segundo plano
+ * Background Status Polling
  */
 function startCardPolling(orderId) {
   if (pollInterval) clearInterval(pollInterval);
@@ -388,39 +397,39 @@ function startCardPolling(orderId) {
         handleCardApproved(data.order);
       }
     } catch (e) {
-      console.warn('Error en polling:', e);
+      console.warn('Polling error:', e);
     }
   }, 2500);
 }
 
 /**
- * Desbloqueo y entrega tras aprobación:
- * Todos los botones se compactan moviéndose al medio y desaparecen,
- * quedando ÚNICAMENTE el botón verde 3D de WhatsApp.
+ * Delivery upon payment approval:
+ * All previous buttons compact smoothly into the center and disappear,
+ * leaving ONLY the green 3D WhatsApp button.
  */
 function handleCardApproved(order) {
   if (pollInterval) clearInterval(pollInterval);
 
-  // 1. Ocultar spinner
+  // 1. Hide spinner
   const spinner = document.getElementById('statusSpinner');
   if (spinner) spinner.style.display = 'none';
 
-  // 2. Compactar y hacer desaparecer en transición al centro todos los botones previos
+  // 2. Compact and collapse previous buttons into the center
   const collapseArea = document.getElementById('paywallCollapseArea');
   if (collapseArea) {
     collapseArea.classList.add('collapsed');
   }
 
-  // 3. Preparar estado de éxito
+  // 3. Prepare success state
   const statusBox = document.getElementById('cardStatusBox');
   statusBox.style.display = 'block';
   statusBox.classList.add('status-success');
-  document.getElementById('statusMsg').innerText = 'Pago acreditado con éxito. Tu tarjeta está lista:';
+  document.getElementById('statusMsg').innerText = 'Payment approved successfully. Your invitation card is ready:';
 
   const accessUrl = order.accessUrl || `/tarjeta/${order.orderId || order.id}`;
   unlockedCardUrl = window.location.origin + accessUrl;
 
-  // 4. Mostrar y animar el botón verde 3D de WhatsApp (el único que queda)
+  // 4. Reveal and animate 3D green button (only button remaining)
   const actions = document.getElementById('unlockedActions');
   actions.style.display = 'flex';
 
@@ -429,27 +438,27 @@ function handleCardApproved(order) {
     btnShare.classList.add('revealed');
   }
 
-  showToast('Tarjeta activada con éxito');
+  showToast('Invitation activated successfully');
 }
 
 /**
- * Exportar a WhatsApp: Saludo simple + Link, nada más (Sin repeticiones ni emojis)
+ * Export to WhatsApp: Single greeting + link, no repeated greeting
  */
 function handleShareFinalInvitation() {
   if (!unlockedCardUrl) return;
-  const text = encodeURIComponent(`Hola, te comparto la invitacion:\n${unlockedCardUrl}`);
+  const text = encodeURIComponent(`Hi, here is the invitation:\n${unlockedCardUrl}`);
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 }
 
 /**
- * Simulación de Pago Aprobado
+ * Simulate Approved Payment (Test Mode)
  */
 async function handleSimulateCardPayment() {
   try {
     const statusBox = document.getElementById('cardStatusBox');
     statusBox.style.display = 'block';
     document.getElementById('statusSpinner').style.display = 'block';
-    document.getElementById('statusMsg').innerText = 'Simulando pago de $5.00 USD...';
+    document.getElementById('statusMsg').innerText = 'Simulating $5.00 USD payment...';
     document.getElementById('unlockedActions').style.display = 'none';
 
     const resOrder = await fetch('/api/paypal/create-order', {
@@ -460,7 +469,7 @@ async function handleSimulateCardPayment() {
     const orderData = await resOrder.json();
 
     if (!orderData.success || !orderData.orderId) {
-      throw new Error(orderData.error || 'Error al inicializar la orden');
+      throw new Error(orderData.error || 'Failed to initialize order');
     }
 
     const resSim = await fetch(`/api/simulate-payment/${orderData.orderId}`, { method: 'POST' });
@@ -469,7 +478,7 @@ async function handleSimulateCardPayment() {
     if (simData.success) {
       handleCardApproved({ accessUrl: simData.order.accessUrl });
     } else {
-      throw new Error(simData.error || 'Error en la simulación');
+      throw new Error(simData.error || 'Simulation failed');
     }
   } catch (err) {
     showFunModal({ title: 'Error', text: err.message });

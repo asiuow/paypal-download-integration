@@ -52,10 +52,10 @@ class OrderService {
     const eventType = cardData.eventType || 'cumpleanos';
     
     const eventTitles = {
-      'cumpleanos': 'Tarjeta de Cumpleaños',
-      'bautismo': 'Tarjeta de Bautismo',
-      'asado': 'Invitación a Gran Asado',
-      'evento': 'Invitación a Evento Especial'
+      'cumpleanos': 'Birthday Invitation',
+      'bautismo': 'Baptism Invitation',
+      'asado': 'Barbecue Invitation',
+      'evento': 'Special Event Invitation'
     };
 
     const order = {
@@ -64,8 +64,8 @@ class OrderService {
       status: 'pending',
       item: {
         ...config.item,
-        title: `${eventTitles[eventType] || 'Tarjeta Digital'} - ${cardData.name || 'Personalizada'}`,
-        description: `Invitación interactiva para ${cardData.name || 'evento'} (${eventType})`
+        title: `${eventTitles[eventType] || 'Digital Card'} - ${cardData.name || 'Custom'}`,
+        description: `Interactive invitation for ${cardData.name || 'event'} (${eventType})`
       },
       amount: config.item.unitPrice,
       currency: config.item.currencyId,
@@ -76,15 +76,16 @@ class OrderService {
       downloadToken: null,
       cardData: {
         eventType: eventType,
-        name: (cardData.name || 'Festejado').slice(0, 20),
+        name: (cardData.name || 'Honoree').slice(0, 20),
         age: cardData.age || '',
         photo: cardData.photo || '',
-        address: cardData.address || 'Av. Principal 123',
-        city: cardData.city || 'Buenos Aires',
-        province: cardData.province || 'Buenos Aires',
-        country: cardData.country || 'Argentina',
-        date: cardData.date || 'Sábado',
-        time: cardData.time || '18:00 hs'
+        address: cardData.address || '742 Evergreen Terrace',
+        city: cardData.city || 'Springfield',
+        province: cardData.province || 'Oregon',
+        zipCode: cardData.zipCode || '97477',
+        country: cardData.country || 'United States',
+        date: cardData.date || 'Saturday, Nov 15',
+        time: cardData.time || '6:00 PM'
       },
       metadata
     };

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Creador de Tarjetas Digitales | PayPal Integration</title>
+  <title>Digital Card Creator | PayPal Integration</title>
   <link rel="stylesheet" href="/css/style.css">
 
-  <!-- SDK Oficial de PayPal -->
+  <!-- Official PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AapqVwFYqt4Bjj5_7CoYTF0tUJH5pcqPa9KhdHMNHcGcQbZ9KlQEhTXEv8BYTxV94AYpDyORpT0vm_t9&currency=USD&enable-funding=card"></script>
 </head>
 <body>
 
   <main class="container">
     
-    <!-- Indicador de Pasos (0: Modelo, 1: Datos, 2: Lugar, 3: Chequeo, 4: Tarjeta) -->
+    <!-- Steps Indicator (0: Template, 1: Details, 2: Location, 3: Review, 4: Card) -->
     <div id="stepsIndicator" class="steps-indicator">
       <div id="dot0" class="step-dot active"></div>
       <div id="dot1" class="step-dot"></div>
@@ -22,225 +22,239 @@
       <div id="dot4" class="step-dot"></div>
     </div>
 
-    <!-- PANEL 0: HOME - 4 CARTAS EN FORMA DE ABANICO -->
+    <!-- PANEL 0: HOME - 4 TEMPLATE CARDS IN FAN SHAPE -->
     <section id="panel0" class="panel active">
-      <h2>Elige tu Tarjeta</h2>
-      <p class="panel-desc">Toca una carta para traerla al frente y personalizarla</p>
+      <h2>Select Your Card</h2>
+      <p class="panel-desc">Tap a card to bring it to the front and customize</p>
 
-      <!-- Escena de Cartas Superpuestas en Abanico -->
+      <!-- Interactive Fan Scene -->
       <div class="fan-scene">
         
-        <!-- 1. Cumpleaños -->
+        <!-- 1. Birthday -->
         <div id="cardCumple" class="fan-card card-cumple active-front" onclick="selectFanCard('cumpleanos', this)">
-          <div class="fan-card-title">Cumpleaños</div>
-          <div class="fan-card-subtitle">Festejo y Torta</div>
+          <div class="fan-card-title">Birthday</div>
+          <div class="fan-card-subtitle">Celebration & Cake</div>
         </div>
 
-        <!-- 2. Bautismo -->
+        <!-- 2. Baptism -->
         <div id="cardBautismo" class="fan-card card-bautismo" onclick="selectFanCard('bautismo', this)">
-          <div class="fan-card-title">Bautismo</div>
-          <div class="fan-card-subtitle">Bendición y Amor</div>
+          <div class="fan-card-title">Baptism</div>
+          <div class="fan-card-subtitle">Blessing & Love</div>
         </div>
 
-        <!-- 3. Asado -->
+        <!-- 3. Barbecue -->
         <div id="cardAsado" class="fan-card card-asado" onclick="selectFanCard('asado', this)">
-          <div class="fan-card-title">Asado</div>
-          <div class="fan-card-subtitle">Amigos y Fuego</div>
+          <div class="fan-card-title">Barbecue</div>
+          <div class="fan-card-subtitle">Friends & Grill</div>
         </div>
 
-        <!-- 4. Evento -->
+        <!-- 4. Special Event -->
         <div id="cardEvento" class="fan-card card-evento" onclick="selectFanCard('evento', this)">
-          <div class="fan-card-title">Evento</div>
-          <div class="fan-card-subtitle">Celebración</div>
+          <div class="fan-card-title">Special Event</div>
+          <div class="fan-card-subtitle">Party & Celebration</div>
         </div>
 
       </div>
 
       <div style="text-align: center; margin-bottom: 16px;">
-        <span style="font-size: 13px; color: #9ca3af;">Modelo seleccionado: </span>
-        <strong id="selectedModelLabel" style="color: #ef4444; font-size: 14px;">1. Cumpleaños</strong>
+        <span style="font-size: 13px; color: #9ca3af;">Selected template: </span>
+        <strong id="selectedModelLabel" style="color: #ef4444; font-size: 14px;">1. Birthday</strong>
       </div>
 
       <button id="btnStartWizard" class="btn btn-primary" onclick="goToStep(1)">
-        Personalizar este modelo
+        Customize this template
       </button>
     </section>
 
-    <!-- PANEL 1: Nombre, Edad y Foto -->
+    <!-- PANEL 1: Name, Age, and Photo -->
     <section id="panel1" class="panel">
-      <h2 id="step1Title">¿Cómo es tu nombre?</h2>
-      <p class="panel-desc" id="step1Desc">Ingresa los datos del homenajeado o anfitrión</p>
+      <h2 id="step1Title">Who is celebrating?</h2>
+      <p class="panel-desc" id="step1Desc">Enter host or honoree details</p>
 
       <div class="form-group">
-        <label for="inputName" id="labelName">Nombre completo o apodo</label>
-        <input type="text" id="inputName" maxlength="20" placeholder="Ej: Mateo (máx. 20 letras)" oninput="updateCharCount()">
+        <label for="inputName" id="labelName">Full name or nickname</label>
+        <input type="text" id="inputName" maxlength="20" placeholder="e.g. Matthew (max 20 chars)" oninput="updateCharCount()">
         <div id="charCount" class="char-counter">0 / 20</div>
       </div>
 
       <div class="form-group" id="groupAge">
-        <label for="inputAge" id="labelAge">¿Cuántos años cumples?</label>
-        <input type="number" id="inputAge" min="1" max="120" placeholder="Ej: 5">
+        <label for="inputAge" id="labelAge">Age celebrating</label>
+        <input type="number" id="inputAge" min="1" max="120" placeholder="e.g. 5">
       </div>
 
-      <!-- Cargador de Foto con icono grande cuando no hay foto cargada -->
+      <!-- Photo Uploader with single large camera icon when unuploaded -->
       <div class="form-group">
-        <label>Foto destacada</label>
+        <label>Featured photo</label>
         <div class="photo-uploader" onclick="document.getElementById('filePhoto').click()">
           <input type="file" id="filePhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
           <div class="photo-preview-box" id="previewPhotoBox">
             <span id="photoIcon" style="font-size: 40px;">📷</span>
             <img id="imgPreview" src="" style="display: none;">
           </div>
-          <div class="uploader-text" id="uploaderText">Subir una foto</div>
-          <div class="uploader-sub">Toca aquí para seleccionar de tu galería</div>
+          <div class="uploader-text" id="uploaderText">Upload a photo</div>
+          <div class="uploader-sub">Tap here to select from your gallery</div>
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(0)">Cambiar modelo</button>
-        <button class="btn btn-primary" onclick="goToStep(2)">Siguiente paso</button>
+        <button class="btn btn-secondary" onclick="goToStep(0)">Change template</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Next step</button>
       </div>
     </section>
 
-    <!-- PANEL 2: Ubicación Geográfica Precisa y Horario -->
+    <!-- PANEL 2: Location & Schedule -->
     <section id="panel2" class="panel">
-      <h2>¿Dónde y cuándo es?</h2>
-      <p class="panel-desc">Completa los datos para ubicar el mapa con total exactitud</p>
+      <h2>Where and when is it?</h2>
+      <p class="panel-desc">Enter event location and schedule details</p>
+
+      <div class="form-group">
+        <label for="inputAddress">Street Address</label>
+        <input type="text" id="inputAddress" placeholder="e.g. 742 Evergreen Terrace">
+      </div>
 
       <div class="form-grid-2">
         <div class="form-group">
-          <label for="inputCountry">País</label>
-          <input type="text" id="inputCountry" value="Argentina" placeholder="Ej: Argentina">
+          <label for="inputCity">City</label>
+          <input type="text" id="inputCity" placeholder="e.g. Springfield">
         </div>
         <div class="form-group">
-          <label for="inputProvince">Provincia / Estado</label>
-          <input type="text" id="inputProvince" placeholder="Ej: Buenos Aires">
+          <label for="inputProvince">State</label>
+          <input type="text" id="inputProvince" placeholder="e.g. Oregon">
         </div>
       </div>
 
       <div class="form-grid-2">
         <div class="form-group">
-          <label for="inputCity">Ciudad / Localidad</label>
-          <input type="text" id="inputCity" placeholder="Ej: Rosario">
+          <label for="inputZip">Zip Code</label>
+          <input type="text" id="inputZip" placeholder="e.g. 97477">
         </div>
         <div class="form-group">
-          <label for="inputAddress">Dirección (Calle y N°)</label>
-          <input type="text" id="inputAddress" placeholder="Ej: Av. San Martín 1540">
+          <label for="inputCountry">Country</label>
+          <input type="text" id="inputCountry" value="United States" placeholder="e.g. United States">
         </div>
+      </div>
+
+      <!-- Note for Google Maps accuracy -->
+      <div style="font-size: 12px; color: #9ca3af; margin-top: -4px; margin-bottom: 18px; line-height: 1.4;">
+        Enter complete details for precise Google Maps location.
       </div>
 
       <div class="form-grid-2">
         <div class="form-group">
-          <label for="inputDate">Día / Fecha</label>
-          <input type="text" id="inputDate" placeholder="Ej: Sábado 15 de Noviembre">
+          <label for="inputDate">Date</label>
+          <input type="text" id="inputDate" placeholder="e.g. Saturday, November 15">
         </div>
         <div class="form-group">
-          <label for="inputTime">Hora de inicio</label>
-          <input type="text" id="inputTime" placeholder="Ej: 18:00 hs">
+          <label for="inputTime">Start Time</label>
+          <input type="text" id="inputTime" placeholder="e.g. 6:00 PM">
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(1)">Volver</button>
-        <button class="btn btn-primary" onclick="goToStep(3)">Siguiente paso</button>
+        <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Next step</button>
       </div>
     </section>
 
-    <!-- PANEL 3: Chequeo de Información -->
+    <!-- PANEL 3: Review Details -->
     <section id="panel3" class="panel">
-      <h2>Revisa los datos</h2>
-      <p class="panel-desc">Verifica la información antes de maquetar la tarjeta final</p>
+      <h2>Review Your Details</h2>
+      <p class="panel-desc">Verify your information before creating your final card</p>
 
       <div class="summary-card">
         <div class="summary-item">
-          <span class="summary-label">Modelo:</span>
-          <span class="summary-val" id="sumModel">Cumpleaños</span>
+          <span class="summary-label">Template:</span>
+          <span class="summary-val" id="sumModel">Birthday</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Nombre:</span>
+          <span class="summary-label">Name:</span>
           <span class="summary-val" id="sumName">-</span>
         </div>
         <div class="summary-item" id="sumAgeRow">
-          <span class="summary-label">Edad / Años:</span>
+          <span class="summary-label">Age:</span>
           <span class="summary-val" id="sumAge">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Foto:</span>
-          <span class="summary-val" id="sumPhotoStatus">Sin foto</span>
+          <span class="summary-label">Photo:</span>
+          <span class="summary-val" id="sumPhotoStatus">No photo</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Dirección:</span>
+          <span class="summary-label">Street Address:</span>
           <span class="summary-val" id="sumAddress">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Ciudad / Provincia:</span>
+          <span class="summary-label">City, State:</span>
           <span class="summary-val" id="sumCityProv">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">País:</span>
+          <span class="summary-label">Zip Code:</span>
+          <span class="summary-val" id="sumZip">-</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Country:</span>
           <span class="summary-val" id="sumCountry">-</span>
         </div>
         <div class="summary-item">
-          <span class="summary-label">Fecha y Hora:</span>
+          <span class="summary-label">Date & Time:</span>
           <span class="summary-val" id="sumDateTime">-</span>
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(2)">Volver</button>
-        <button class="btn btn-primary" onclick="generateCardPreview()">Formar mi Tarjeta</button>
+        <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+        <button class="btn btn-primary" onclick="generateCardPreview()">Create My Card</button>
       </div>
     </section>
 
-    <!-- PANEL 4: Tarjeta Scrolleable Final -->
+    <!-- PANEL 4: Final Scrollable Card Preview & Paywall -->
     <section id="panel4" class="panel">
       
       <div class="card-scrollable">
         
-        <!-- Foto destacada -->
+        <!-- Featured Photo -->
         <div class="card-photo-hero">
-          <img id="cardHeroPhoto" src="" alt="Festejado">
+          <img id="cardHeroPhoto" src="" alt="Honoree">
         </div>
 
-        <div class="card-badge" id="cardAgeBadge">¡Cumple 5 Años!</div>
-        <h1 class="card-title" id="cardNameTitle">Mateo</h1>
-        <p class="card-invite-msg" id="cardHeadlineText">¡Te invito a celebrar juntos!</p>
+        <div class="card-badge" id="cardAgeBadge">Turning 5!</div>
+        <h1 class="card-title" id="cardNameTitle">Matthew</h1>
+        <p class="card-invite-msg" id="cardHeadlineText">You are invited to celebrate together!</p>
 
-        <!-- Bloque Fecha y Hora -->
+        <!-- Date & Time Info -->
         <div class="card-grid-info">
           <div class="grid-cell">
-            <span>Día</span>
-            <strong id="cardDateText">Sábado 15</strong>
+            <span>Date</span>
+            <strong id="cardDateText">Saturday 15</strong>
           </div>
           <div class="grid-cell">
-            <span>Horario</span>
-            <strong id="cardTimeText">18:00 hs</strong>
+            <span>Time</span>
+            <strong id="cardTimeText">6:00 PM</strong>
           </div>
         </div>
 
-        <!-- Bloque Ubicación Geográfica con Escala de 3 Manzanas -->
+        <!-- Location Block with 3-block scale map -->
         <div class="map-box">
-          <div class="map-location-title">¿Dónde es el encuentro?</div>
-          <div class="map-address-text" id="cardAddressText">Av. San Martín 1540</div>
-          <div class="map-city-text" id="cardCityText">Rosario, Santa Fe (Argentina)</div>
+          <div class="map-location-title">Where is the event?</div>
+          <div class="map-address-text" id="cardAddressText">742 Evergreen Terrace</div>
+          <div class="map-city-text" id="cardCityText">Springfield, OR 97477 (United States)</div>
 
-          <!-- Mapa Roadmap No Satelital (3 Manzanas) -->
+          <!-- Embedded Map -->
           <div class="map-embed-wrapper">
-            <iframe id="cardMapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-60.655%2C-32.955%2C-60.648%2C-32.948&layer=mapnik&marker=-32.9515%2C-60.6515"></iframe>
+            <iframe id="cardMapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=-123.03%2C44.04%2C-122.99%2C44.06&layer=mapnik"></iframe>
           </div>
 
           <a id="cardGmapsLink" href="#" target="_blank" class="btn-gmaps">
-            Abrir en Google Maps / GPS
+            Open in Google Maps / GPS
           </a>
         </div>
 
-        <!-- Reproductor de Música -->
+        <!-- Music Player -->
         <div class="audio-bar">
           <div class="audio-label">
-            <span>Música de Celebración</span>
+            <span>Celebration Music</span>
           </div>
           <button id="btnPlayMusic" class="btn-play-music" onclick="toggleAudio()">
-            Escuchar
+            Play
           </button>
         </div>
 
@@ -249,43 +263,43 @@
           <source src="/audio/celebration.wav" type="audio/wav">
         </audio>
 
-        <!-- Bloque de Compra con PayPal Checkout v2 -->
+        <!-- Paywall Block -->
         <div class="paywall-block">
 
-          <!-- Área que se compacta al centro y desaparece al pagar -->
+          <!-- Area that smoothly collapses to the center upon payment -->
           <div id="paywallCollapseArea" class="compact-collapse">
             <div class="price-box">
-              <span>Precio de activación</span>
+              <span>Activation price</span>
               <strong>$5.00 USD</strong>
             </div>
 
-            <!-- Botón oficial de PayPal (Método Mercado Pago: pestaña limpia sin popups dobles) -->
+            <!-- Official PayPal Button (Clean tab method, no popup issues) -->
             <button id="btnPayPayPal" class="btn btn-paypal" onclick="handlePayPayPal()">
-              Pagar con PayPal ($5.00 USD)
+              Pay with PayPal ($5.00 USD)
             </button>
 
             <div style="margin-top: 14px;">
               <button class="btn-sim-link" onclick="handleSimulateCardPayment()">
-                Simular pago aprobado (Modo Pruebas)
+                Simulate approved payment (Test Mode)
               </button>
             </div>
 
             <div style="margin-top: 14px;">
               <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="goToStep(1)">
-                Modificar datos de la tarjeta
+                Edit card details
               </button>
             </div>
           </div>
 
-          <!-- Estado del Pago en Tiempo Real -->
+          <!-- Real-Time Payment Status -->
           <div id="cardStatusBox" class="status-box" style="display: none;">
             <div id="statusSpinner" class="status-spinner" style="display: none;"></div>
-            <div id="statusMsg" style="font-size: 14px; font-weight: 600; color: #ffffff;">Esperando confirmación en PayPal...</div>
+            <div id="statusMsg" style="font-size: 14px; font-weight: 600; color: #ffffff;">Waiting for PayPal confirmation...</div>
 
-            <!-- ÚNICO BOTÓN QUE QUEDA TRAS PAGAR: EL VERDE 3D -->
+            <!-- ONLY BUTTON REMAINING AFTER PAYMENT: 3D GREEN WHATSAPP BUTTON -->
             <div id="unlockedActions" style="display: none; flex-direction: column; margin-top: 16px;">
               <button id="btnWhatsappShare" class="btn-whatsapp-3d" onclick="handleShareFinalInvitation()">
-                COMPARTIR EN WHATSAPP
+                SHARE ON WHATSAPP
               </button>
             </div>
           </div>
@@ -298,14 +312,14 @@
 
   </main>
 
-  <div id="toast" class="toast">Enlace copiado</div>
+  <div id="toast" class="toast">Link copied</div>
 
-  <!-- Pop-Up Modal Estilo Mercado Pago (Fondo blanco, esquinas redondeadas, gris bold) -->
+  <!-- Pop-Up Modal (White background, rounded corners, bold gray text) -->
   <div id="funModalOverlay" class="fun-modal-overlay" onclick="handleFunModalOverlayClick(event)">
     <div class="fun-modal-card">
-      <h3 id="funModalTitle" class="fun-modal-title">Un momento</h3>
-      <p id="funModalText" class="fun-modal-text">Por favor completa los datos para continuar.</p>
-      <button class="fun-modal-btn" onclick="closeFunModal()">De acuerdo</button>
+      <h3 id="funModalTitle" class="fun-modal-title">Please Note</h3>
+      <p id="funModalText" class="fun-modal-text">Please complete all required fields to continue.</p>
+      <button class="fun-modal-btn" onclick="closeFunModal()">Got it</button>
     </div>
   </div>
 

@@ -9,74 +9,77 @@ const VAULT_FILE_PATH = path.join(__dirname, '../vault/product-app.html');
 export const vaultService = {
   getProtectedProductContent(orderId, order = {}) {
     if (!fs.existsSync(VAULT_FILE_PATH)) {
-      throw new Error('Plantilla de tarjeta no encontrada en la bóveda.');
+      throw new Error('Card template not found in vault.');
     }
 
     let content = fs.readFileSync(VAULT_FILE_PATH, 'utf8');
     const card = order.cardData || {
       eventType: 'cumpleanos',
-      name: 'Festejado',
+      name: 'Honoree',
       age: '5',
       photo: '',
-      address: 'Av. Corrientes 1234',
-      city: 'Buenos Aires',
-      province: 'Buenos Aires',
-      country: 'Argentina',
-      date: 'Sábado',
-      time: '18:00 hs'
+      address: '742 Evergreen Terrace',
+      city: 'Springfield',
+      province: 'Oregon',
+      zipCode: '97477',
+      country: 'United States',
+      date: 'Saturday, Nov 15',
+      time: '6:00 PM'
     };
 
     const eventLabels = {
       'cumpleanos': {
-        ogTitle: 'Te invito a mi cumple',
-        ogDesc: 'Toca para ver la invitación',
-        shareText: 'Te invito a mi cumple',
-        badge: card.age ? `¡Cumple ${card.age} Años!` : '¡Feliz Cumpleaños!',
-        headline: '¡Te invito a festejar mi cumpleaños juntos!',
+        ogTitle: 'Birthday Invitation',
+        ogDesc: 'Tap to view the invitation',
+        shareText: 'Hi, here is the invitation:',
+        badge: card.age ? `Turning ${card.age}!` : 'Happy Birthday!',
+        headline: 'You are invited to celebrate together!',
         themeColor: '#ef4444'
       },
       'bautismo': {
-        ogTitle: 'Te invito a mi bautismo',
-        ogDesc: 'Toca para ver la invitación',
-        shareText: 'Te invito a mi bautismo',
-        badge: 'Mi Bautismo',
-        headline: 'Te invito a compartir este momento tan especial y bendecido',
+        ogTitle: 'Baptism Invitation',
+        ogDesc: 'Tap to view the invitation',
+        shareText: 'Hi, here is the invitation:',
+        badge: 'Holy Baptism',
+        headline: 'Join us in celebrating this sacred and blessed milestone',
         themeColor: '#0ea5e9'
       },
       'asado': {
-        ogTitle: 'Te invito a un asado',
-        ogDesc: 'Toca para ver la invitación',
-        shareText: 'Te invito a un asado',
-        badge: '¡Gran Asado!',
-        headline: '¡Se prende el fuego! Te invito a compartir un gran asado',
+        ogTitle: 'Barbecue Invitation',
+        ogDesc: 'Tap to view the invitation',
+        shareText: 'Hi, here is the invitation:',
+        badge: 'Great Barbecue!',
+        headline: 'The grill is fired up! Come enjoy good food and friends',
         themeColor: '#f97316'
       },
       'evento': {
-        ogTitle: 'Te invito a mi evento',
-        ogDesc: 'Toca para ver la invitación',
-        shareText: 'Te invito a mi evento',
-        badge: 'Evento Especial',
-        headline: 'Estás cordialmente invitado a celebrar con nosotros',
+        ogTitle: 'Special Event Invitation',
+        ogDesc: 'Tap to view the invitation',
+        shareText: 'Hi, here is the invitation:',
+        badge: 'Special Celebration',
+        headline: 'You are cordially invited to celebrate with us',
         themeColor: '#8b5cf6'
       }
     };
 
     const cfg = eventLabels[card.eventType] || eventLabels['cumpleanos'];
 
-    let fullLocation = card.address;
+    let fullLocation = card.address || '';
     if (card.city) fullLocation += `, ${card.city}`;
     if (card.province) fullLocation += `, ${card.province}`;
+    if (card.zipCode) fullLocation += ` ${card.zipCode}`;
     if (card.country) fullLocation += `, ${card.country}`;
 
     content = content
-      .replace(/{{NAME}}/g, card.name || 'Festejado')
+      .replace(/{{NAME}}/g, card.name || 'Honoree')
       .replace(/{{AGE}}/g, card.age || '')
-      .replace(/{{DATE}}/g, card.date || 'Próximamente')
-      .replace(/{{TIME}}/g, card.time || 'A coordinar')
-      .replace(/{{ADDRESS}}/g, card.address || 'Ubicación')
+      .replace(/{{DATE}}/g, card.date || 'Coming Soon')
+      .replace(/{{TIME}}/g, card.time || 'TBD')
+      .replace(/{{ADDRESS}}/g, card.address || 'Location')
       .replace(/{{CITY}}/g, card.city || '')
       .replace(/{{PROVINCE}}/g, card.province || '')
-      .replace(/{{COUNTRY}}/g, card.country || 'Argentina')
+      .replace(/{{ZIP_CODE}}/g, card.zipCode || '')
+      .replace(/{{COUNTRY}}/g, card.country || 'United States')
       .replace(/{{MAPS_QUERY_ENCODED}}/g, encodeURIComponent(fullLocation))
       .replace(/{{PHOTO}}/g, card.photo || '')
       .replace(/{{ORDER_ID}}/g, orderId)

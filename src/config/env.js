@@ -25,8 +25,8 @@ export const config = {
   },
   item: {
     id: 'prod-digital-card-01',
-    title: 'Tarjeta Digital Interactiva Personalizada',
-    description: 'Invitación con música festiva, mapa gráfico y foto personalizada.',
+    title: 'Custom Interactive Digital Card',
+    description: 'Custom digital invitation card with celebration music, interactive map, and photo.',
     unitPrice: parseFloat(process.env.ITEM_PRICE || '5.00'),
     currencyId: process.env.ITEM_CURRENCY || 'USD',
     quantity: 1
