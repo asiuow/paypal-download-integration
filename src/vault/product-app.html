@@ -80,13 +80,14 @@
     }
 
     .photo-wrapper {
-      width: 140px;
-      height: 140px;
+      width: 100%;
+      max-width: 260px;
+      max-height: 260px;
       margin: 0 auto 16px;
-      border-radius: 50%;
+      border-radius: 20px;
       padding: 4px;
-      background: linear-gradient(135deg, {{THEME_COLOR}}, #ffffff55);
-      box-shadow: 0 8px 25px {{THEME_COLOR}}44;
+      background: linear-gradient(135deg, {{THEME_COLOR}}, #ffffff33);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -95,9 +96,10 @@
 
     .photo-img {
       width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
+      height: auto;
+      max-height: 250px;
+      border-radius: 16px;
+      object-fit: contain;
       display: block;
       background: #1e1e2d;
     }
