@@ -222,47 +222,7 @@
       text-decoration: none;
     }
 
-    /* 3D Green Plastic Button with Debossed Letters */
-    .btn-whatsapp-3d {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 20px;
-      border-radius: 16px;
-      background: linear-gradient(180deg, #4ade80 0%, #22c55e 35%, #16a34a 70%, #15803d 100%);
-      border: 1px solid #166534;
-      border-top: 2px solid #86efac;
-      border-bottom: 2px solid #14532d;
-      box-shadow: 
-        inset 0 2px 4px rgba(255, 255, 255, 0.5),
-        inset 0 -3px 4px rgba(0, 0, 0, 0.4),
-        0 6px 0 #0f5c2b,
-        0 12px 25px rgba(34, 197, 94, 0.45);
-      color: #e6ffed;
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-      text-shadow: 0 -1px 2px rgba(0, 0, 0, 0.85), 0 1px 1px rgba(255, 255, 255, 0.35);
-      transition: all 0.15s ease;
-      user-select: none;
-    }
 
-    .btn-whatsapp-3d:hover {
-      filter: brightness(1.06);
-    }
-
-    .btn-whatsapp-3d:active {
-      transform: translateY(4px);
-      box-shadow: 
-        inset 0 2px 3px rgba(255, 255, 255, 0.35),
-        inset 0 -2px 3px rgba(0, 0, 0, 0.4),
-        0 2px 0 #0f5c2b,
-        0 4px 10px rgba(34, 197, 94, 0.3);
-    }
 
     footer {
       margin-top: 24px;
@@ -322,10 +282,6 @@
       </a>
     </div>
 
-    <button class="btn-whatsapp-3d" onclick="shareInvitation()">
-      SHARE ON WHATSAPP
-    </button>
-
     <footer>
       Interactive Digital Invitation
     </footer>
@@ -350,12 +306,6 @@
           musicText.innerText = 'Tap here to play music';
         });
       }
-    }
-
-    function shareInvitation() {
-      const shareUrl = window.location.href;
-      const text = encodeURIComponent("Hi, here is the invitation:\n" + shareUrl);
-      window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
     }
 
     window.addEventListener('click', function initPlay() {
