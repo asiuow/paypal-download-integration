@@ -10,54 +10,84 @@ export const downloadController = {
     const idParam = req.params.id || req.params.token;
     
     if (!idParam) {
-      return res.status(404).send('Identificador no provisto.');
+      return res.status(404).send('Identifier not provided.');
     }
 
     // 1. Buscar orden por identificador universal (shortId, ID completo o Token)
-    const order = orderService.getOrder(idParam);
+    let order = orderService.getOrder(idParam);
 
     if (!order) {
-      // Si no coincide directo, intentar verificación criptográfica
       const verification = tokenService.verifyToken(idParam, false);
-      if (!verification.valid) {
-        return res.status(404).send(`
-          <!DOCTYPE html>
-          <html lang="es">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Invitación no encontrada</title>
-            <style>
-              body { background: #0b0b0f; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; padding: 20px; }
-              .card { background: #161620; padding: 32px 24px; border-radius: 20px; border: 1px solid #282836; max-width: 380px; }
-              h1 { font-size: 20px; margin-bottom: 10px; color: #ef4444; }
-              p { color: #9ca3af; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
-              a { display: inline-block; background: #0070ba; color: #fff; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; }
-            </style>
-          </head>
-          <body>
-            <div class="card">
-              <h1>🎈 Invitación no disponible</h1>
-              <p>El enlace que intentas abrir no existe o ha expirado.</p>
-              <a href="/">Crear una nueva tarjeta</a>
-            </div>
-          </body>
-          </html>
-        `);
+      if (verification.valid && verification.payload?.orderId) {
+        order = orderService.getOrder(verification.payload.orderId);
       }
     }
 
+    if (!order) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Invitation Not Found</title>
+          <style>
+            body { background: #0b0b0f; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; padding: 20px; }
+            .card { background: #161620; padding: 36px 28px; border-radius: 24px; border: 1px solid #282836; max-width: 380px; }
+            h1 { font-size: 20px; margin-bottom: 10px; color: #ef4444; font-weight: 800; }
+            p { color: #9ca3af; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+            a { display: inline-block; background: #0070ba; color: #fff; padding: 13px 22px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>Invitation Not Found</h1>
+            <p>The invitation you are trying to view does not exist or has been removed.</p>
+            <a href="/">Create an invitation</a>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+
+    // 2. Control de Caducidad (Vencimiento)
+    if (order.expiresAt && new Date() > new Date(order.expiresAt)) {
+      return res.status(410).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Invitation Expired</title>
+          <style>
+            body { background: #0b0b0f; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; padding: 20px; }
+            .card { background: #161620; padding: 36px 28px; border-radius: 24px; border: 1px solid #282836; max-width: 380px; }
+            h1 { font-size: 20px; margin-bottom: 10px; color: #f59e0b; font-weight: 800; }
+            p { color: #9ca3af; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+            a { display: inline-block; background: #0070ba; color: #fff; padding: 13px 22px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>Invitation Expired</h1>
+            <p>This invitation card has expired and is no longer available.</p>
+            <a href="/">Create a new invitation</a>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+
     try {
-      const orderId = order ? order.id : idParam;
-      const productContent = vaultService.getProtectedProductContent(orderId, order);
+      const productContent = vaultService.getProtectedProductContent(order.id, order);
 
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('X-Content-Type-Options', 'nosniff');
-      res.setHeader('Cache-Control', 'public, max-age=300'); // Cache liviano para móviles
+      res.setHeader('Cache-Control', 'public, max-age=300');
       return res.send(productContent);
     } catch (error) {
       console.error('[DownloadController] Error sirviendo producto:', error);
-      return res.status(500).send('Error cargando la tarjeta de invitación.');
+      return res.status(500).send('Error loading invitation card.');
     }
   }
 };

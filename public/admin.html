@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Panel | Paid Cards Vault</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: #0d0d14;
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Auth Gate */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: #0d0d14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #161622;
+      border: 1px solid #28283c;
+      border-radius: 20px;
+      padding: 36px 30px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .auth-card h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .auth-card p {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 24px;
+    }
+
+    .auth-input {
+      width: 100%;
+      background: #0f0f18;
+      border: 1px solid #32324a;
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: #ffffff;
+      font-size: 15px;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .auth-input:focus {
+      border-color: #3b82f6;
+    }
+
+    .auth-btn {
+      width: 100%;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .auth-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .auth-error {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Main Dashboard Layout */
+    .dashboard-container {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: #151522;
+      border-bottom: 1px solid #232336;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .global-days-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1b1b2a;
+      border: 1px solid #2d2d44;
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+
+    .global-days-label {
+      font-size: 12px;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+
+    .counter-btn {
+      background: #252538;
+      border: 1px solid #3c3c58;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .counter-btn:hover {
+      background: #3b3b55;
+    }
+
+    .global-days-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: #3b82f6;
+      min-width: 45px;
+      text-align: center;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid #3c3c58;
+      color: #9ca3af;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-logout:hover {
+      color: #ffffff;
+      border-color: #555577;
+    }
+
+    /* KPI Summary Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      padding: 16px 24px;
+      background: #11111a;
+      border-bottom: 1px solid #202030;
+    }
+
+    .kpi-card {
+      background: #181826;
+      border: 1px solid #26263a;
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: #8b8b9e;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .kpi-val.green { color: #22c55e; }
+    .kpi-val.amber { color: #f59e0b; }
+    .kpi-val.blue { color: #3b82f6; }
+
+    /* Filter & Search Bar */
+    .toolbar-row {
+      padding: 12px 24px;
+      background: #13131e;
+      border-bottom: 1px solid #202030;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      background: #1a1a28;
+      border: 1px solid #2d2d42;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: #ffffff;
+      font-size: 13px;
+      width: 320px;
+      max-width: 100%;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #3b82f6;
+    }
+
+    .filter-select {
+      background: #1a1a28;
+      border: 1px solid #2d2d42;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Excel-Style Table View */
+    .table-wrapper {
+      flex: 1;
+      overflow: auto;
+      background: #0d0d14;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #181826;
+      color: #9ca3af;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 11px 14px;
+      border-bottom: 2px solid #2b2b40;
+      border-right: 1px solid #222234;
+      z-index: 10;
+    }
+
+    tbody tr {
+      background: #12121c;
+      border-bottom: 1px solid #1c1c2a;
+      transition: background 0.1s;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #151524;
+    }
+
+    tbody tr:hover {
+      background: #1e1e32;
+    }
+
+    tbody td {
+      padding: 10px 14px;
+      border-right: 1px solid #1c1c2a;
+      color: #d1d5db;
+      vertical-align: middle;
+    }
+
+    /* Cells Elements */
+    .table-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #333348;
+      background: #1a1a24;
+      display: block;
+    }
+
+    .no-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #1b1b28;
+      border: 1px dashed #333348;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 10px;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-status.active {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .badge-status.expired {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .id-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 700;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .id-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Days Adjuster Column */
+    .days-control-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-adjust {
+      background: #1f1f30;
+      border: 1px solid #3a3a54;
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-adjust:hover {
+      background: #353550;
+      border-color: #555577;
+    }
+
+    .btn-adjust:active {
+      transform: scale(0.92);
+    }
+
+    .days-num {
+      font-weight: 800;
+      font-size: 12px;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .days-num.urgent { color: #f87171; }
+    .days-num.normal { color: #4ade80; }
+
+    /* Photo Modal */
+    #photoModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    #photoModal img {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      border: 2px solid #333348;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password Security Gate (MAU886) -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <h2>Control Panel</h2>
+      <p>Enter administrator password</p>
+      <input type="password" id="authPassword" class="auth-input" placeholder="Password" onkeydown="if(event.key==='Enter') login()">
+      <button class="auth-btn" onclick="login()">Access Dashboard</button>
+      <div id="authError" class="auth-error">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Container -->
+  <div id="dashboardApp" class="dashboard-container">
+    
+    <!-- Header Bar -->
+    <header>
+      <div>
+        <div class="brand-title">Paid Cards Control Panel</div>
+        <div class="brand-sub">Vault Storage & Expiration Management</div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Master Default Days Control -->
+        <div class="global-days-box">
+          <span class="global-days-label">Default Validity:</span>
+          <button class="counter-btn" onclick="adjustGlobalDays(-1)">-</button>
+          <span id="globalDaysDisplay" class="global-days-val">30 d</span>
+          <button class="counter-btn" onclick="adjustGlobalDays(1)">+</button>
+        </div>
+
+        <button class="btn-logout" onclick="logout()">Lock Panel</button>
+      </div>
+    </header>
+
+    <!-- KPI Summary Row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Paid Cards</div>
+        <div id="kpiTotalPaid" class="kpi-val blue">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Revenue</div>
+        <div id="kpiTotalRevenue" class="kpi-val green">$0.00 USD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Cards</div>
+        <div id="kpiActiveCount" class="kpi-val green">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Expired Cards</div>
+        <div id="kpiExpiredCount" class="kpi-val amber">0</div>
+      </div>
+    </div>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="toolbar-row">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by name, city, state, or ID..." oninput="filterOrders()">
+      
+      <div style="display: flex; gap: 8px;">
+        <select id="statusFilter" class="filter-select" onchange="filterOrders()">
+          <option value="all">All Cards</option>
+          <option value="active">Active Only</option>
+          <option value="expired">Expired Only</option>
+        </select>
+        <button class="filter-select" style="padding: 8px 14px;" onclick="loadDashboard()">Refresh</button>
+      </div>
+    </div>
+
+    <!-- Excel-Style Table View -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Card ID</th>
+            <th>Template</th>
+            <th>Host / Name</th>
+            <th>Street Address</th>
+            <th>City, State</th>
+            <th>Zip</th>
+            <th>Country</th>
+            <th>Event Date & Time</th>
+            <th>Amount</th>
+            <th>Paid Date</th>
+            <th>Status</th>
+            <th>Expires On</th>
+            <th>Days Left & Controls</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+          <tr>
+            <td colspan="14" style="text-align: center; padding: 40px; color: #6b7280;">Loading paid cards data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Photo Full Preview Modal -->
+  <div id="photoModal" onclick="closePhotoModal()">
+    <img id="photoModalImg" src="" alt="Full Photo">
+  </div>
+
+  <script>
+    let allOrders = [];
+    let currentDefaultDays = 30;
+
+    function getStoredPassword() {
+      return sessionStorage.getItem('adminPass') || '';
+    }
+
+    async function login() {
+      const pass = document.getElementById('authPassword').value.trim();
+      const errEl = document.getElementById('authError');
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem('adminPass', pass);
+          document.getElementById('authOverlay').style.display = 'none';
+          document.getElementById('dashboardApp').style.display = 'flex';
+          loadDashboard();
+        } else {
+          errEl.style.display = 'block';
+        }
+      } catch (err) {
+        errEl.innerText = 'Connection error. Please try again.';
+        errEl.style.display = 'block';
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('adminPass');
+      location.reload();
+    }
+
+    async function loadDashboard() {
+      const pass = getStoredPassword();
+      if (!pass) return;
+
+      try {
+        const res = await fetch('/api/admin/orders', {
+          headers: { 'x-admin-password': pass }
+        });
+        
+        if (res.status === 401) {
+          sessionStorage.removeItem('adminPass');
+          document.getElementById('authOverlay').style.display = 'flex';
+          document.getElementById('dashboardApp').style.display = 'none';
+          return;
+        }
+
+        const data = await res.json();
+        if (data.success) {
+          allOrders = data.orders || [];
+          currentDefaultDays = data.stats.defaultValidityDays || 30;
+
+          // Update KPIs
+          document.getElementById('kpiTotalPaid').innerText = data.stats.totalPaid;
+          document.getElementById('kpiTotalRevenue').innerText = `$${data.stats.totalRevenue} USD`;
+          document.getElementById('kpiActiveCount').innerText = data.stats.activeCount;
+          document.getElementById('kpiExpiredCount').innerText = data.stats.expiredCount;
+          document.getElementById('globalDaysDisplay').innerText = `${currentDefaultDays} d`;
+
+          renderTable(allOrders);
+        }
+      } catch (e) {
+        console.error('Error loading dashboard:', e);
+      }
+    }
+
+    function renderTable(orders) {
+      const tbody = document.getElementById('ordersTableBody');
+      if (!orders || orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="14" style="text-align: center; padding: 40px; color: #6b7280;">No paid cards found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const paidDateStr = o.paidAt ? new Date(o.paidAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+        const expireDateStr = o.expiresAt ? new Date(o.expiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+        const statusBadge = o.isExpired ? '<span class="badge-status expired">Expired</span>' : '<span class="badge-status active">Active</span>';
+        const daysClass = o.daysRemaining <= 3 ? 'urgent' : 'normal';
+
+        const photoHtml = o.photoUrl 
+          ? `<img src="${o.photoUrl}" class="table-thumb" onclick="openPhotoModal('${o.photoUrl}')">` 
+          : `<div class="no-thumb">No Pic</div>`;
+
+        return `
+          <tr id="row-${o.id}">
+            <td>${photoHtml}</td>
+            <td><a href="${o.directUrl}" target="_blank" class="id-link">${o.shortId}</a></td>
+            <td><span style="font-weight: 700; color: #ffffff;">${o.eventType.toUpperCase()}</span></td>
+            <td><strong>${escapeHtml(o.name)}</strong> ${o.age ? `(${escapeHtml(o.age)}y)` : ''}</td>
+            <td>${escapeHtml(o.address)}</td>
+            <td>${escapeHtml(o.city)}, ${escapeHtml(o.state)}</td>
+            <td>${escapeHtml(o.zipCode)}</td>
+            <td>${escapeHtml(o.country)}</td>
+            <td>${escapeHtml(o.date)} - ${escapeHtml(o.time)}</td>
+            <td><strong>$${parseFloat(o.amount).toFixed(2)}</strong></td>
+            <td>${paidDateStr}</td>
+            <td>${statusBadge}</td>
+            <td id="exp-${o.id}">${expireDateStr}</td>
+            <td>
+              <div class="days-control-cell">
+                <button class="btn-adjust" title="Subtract 1 day" onclick="adjustOrderDays('${o.id}', -1)">-</button>
+                <span id="days-${o.id}" class="days-num ${daysClass}">
+                  ${o.isExpired ? 'Expired' : `${o.daysRemaining}d`}
+                </span>
+                <button class="btn-adjust" title="Add 1 day" onclick="adjustOrderDays('${o.id}', 1)">+</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function adjustOrderDays(orderId, delta) {
+      const pass = getStoredPassword();
+      try {
+        const res = await fetch(`/api/admin/orders/${orderId}/adjust-days`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': pass
+          },
+          body: JSON.stringify({ deltaDays: delta })
+        });
+        const data = await res.json();
+        if (data.success) {
+          loadDashboard(); // Refresh data and statistics
+        }
+      } catch (e) {
+        alert('Failed to update days.');
+      }
+    }
+
+    async function adjustGlobalDays(delta) {
+      const pass = getStoredPassword();
+      const newDays = Math.max(1, currentDefaultDays + delta);
+
+      try {
+        const res = await fetch('/api/admin/settings/default-days', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': pass
+          },
+          body: JSON.stringify({ days: newDays })
+        });
+        const data = await res.json();
+        if (data.success) {
+          currentDefaultDays = data.defaultValidityDays;
+          document.getElementById('globalDaysDisplay').innerText = `${currentDefaultDays} d`;
+        }
+      } catch (e) {
+        alert('Failed to update global days.');
+      }
+    }
+
+    function filterOrders() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const status = document.getElementById('statusFilter').value;
+
+      const filtered = allOrders.filter(o => {
+        const matchesStatus = status === 'all' || 
+          (status === 'active' && !o.isExpired) || 
+          (status === 'expired' && o.isExpired);
+
+        const matchesQuery = !query || 
+          o.shortId.toLowerCase().includes(query) ||
+          o.name.toLowerCase().includes(query) ||
+          o.city.toLowerCase().includes(query) ||
+          o.state.toLowerCase().includes(query) ||
+          o.country.toLowerCase().includes(query) ||
+          o.eventType.toLowerCase().includes(query);
+
+        return matchesStatus && matchesQuery;
+      });
+
+      renderTable(filtered);
+    }
+
+    function openPhotoModal(url) {
+      document.getElementById('photoModalImg').src = url;
+      document.getElementById('photoModal').style.display = 'flex';
+    }
+
+    function closePhotoModal() {
+      document.getElementById('photoModal').style.display = 'none';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '-';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Auto-login if password is saved in session
+    window.addEventListener('DOMContentLoaded', () => {
+      const pass = getStoredPassword();
+      if (pass) {
+        document.getElementById('authPassword').value = pass;
+        login();
+      }
+    });
+  </script>
+</body>
+</html>
