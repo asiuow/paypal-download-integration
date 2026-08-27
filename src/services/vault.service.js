@@ -34,7 +34,7 @@ export const vaultService = {
         shareText: 'Hi, here is the invitation:',
         badge: card.age ? `Turning ${card.age}!` : 'Happy Birthday!',
         headline: 'You are invited to celebrate together!',
-        themeColor: '#ef4444'
+        themeColor: '#f43f5e'
       },
       'bautismo': {
         ogTitle: 'Baptism Invitation',
@@ -42,7 +42,7 @@ export const vaultService = {
         shareText: 'Hi, here is the invitation:',
         badge: 'Holy Baptism',
         headline: 'Join us in celebrating this sacred and blessed milestone',
-        themeColor: '#0ea5e9'
+        themeColor: '#0284c7'
       },
       'asado': {
         ogTitle: 'Barbecue Invitation',
@@ -50,7 +50,7 @@ export const vaultService = {
         shareText: 'Hi, here is the invitation:',
         badge: 'Great Barbecue!',
         headline: 'The grill is fired up! Come enjoy good food and friends',
-        themeColor: '#f97316'
+        themeColor: '#ea580c'
       },
       'evento': {
         ogTitle: 'Special Event Invitation',
@@ -58,7 +58,7 @@ export const vaultService = {
         shareText: 'Hi, here is the invitation:',
         badge: 'Special Celebration',
         headline: 'You are cordially invited to celebrate with us',
-        themeColor: '#8b5cf6'
+        themeColor: '#7c3aed'
       }
     };
 

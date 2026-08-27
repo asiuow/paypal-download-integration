@@ -19,12 +19,13 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #0b0b0f;
-      color: #f3f4f6;
+      background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 30%, #fdf2f8 70%, #f0fdf4 100%);
+      background-attachment: fixed;
+      color: #1e293b;
       display: flex;
       justify-content: center;
       min-height: 100vh;
-      padding: 16px;
+      padding: 20px 16px;
       position: relative;
     }
 
@@ -37,7 +38,7 @@
       pointer-events: none;
       background-image: 
         radial-gradient({{THEME_COLOR}}33 1.5px, transparent 1.5px),
-        radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+        radial-gradient(rgba(148, 163, 184, 0.2) 1px, transparent 1px);
       background-size: 36px 36px, 18px 18px;
       z-index: 1;
     }
@@ -45,38 +46,43 @@
     .card-container {
       width: 100%;
       max-width: 440px;
-      background: #14141c;
-      border: 1px solid #232332;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 232, 240, 0.85);
       border-radius: 28px;
-      padding: 24px 20px;
+      padding: 28px 20px;
       position: relative;
       z-index: 10;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      box-shadow: 
+        0 20px 50px rgba(100, 116, 139, 0.12),
+        0 8px 20px rgba(100, 116, 139, 0.06);
       text-align: center;
       margin: auto 0;
     }
 
     .music-bar-prompt {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+      background: #f8fafc;
       border: 1px dashed {{THEME_COLOR}}88;
       border-radius: 14px;
-      padding: 10px 16px;
+      padding: 11px 16px;
       margin-bottom: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       cursor: pointer;
-      color: #e5e7eb;
+      color: #334155;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     }
 
     .music-bar-prompt:active {
       transform: scale(0.98);
-      background: {{THEME_COLOR}}22;
+      background: #f1f5f9;
     }
 
     .photo-wrapper {
@@ -86,8 +92,8 @@
       margin: 0 auto 16px;
       border-radius: 20px;
       padding: 4px;
-      background: linear-gradient(135deg, {{THEME_COLOR}}, #ffffff33);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, {{THEME_COLOR}}, #818cf8);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.16);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -101,97 +107,97 @@
       border-radius: 16px;
       object-fit: contain;
       display: block;
-      background: #1e1e2d;
+      background: #f8fafc;
     }
 
     .photo-placeholder {
       font-size: 48px;
-      color: #9ca3af;
+      color: #94a3b8;
     }
 
     .badge-event {
       display: inline-block;
-      background: {{THEME_COLOR}}22;
-      border: 1px solid {{THEME_COLOR}}55;
-      color: #ffffff;
-      padding: 6px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.22);
+      color: #4f46e5;
+      padding: 5px 16px;
       border-radius: 20px;
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
     }
 
     h1 {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: -0.5px;
       margin-bottom: 6px;
-      color: #ffffff;
+      color: #0f172a;
       word-break: break-word;
     }
 
     .invite-text {
-      font-size: 15px;
-      color: #d1d5db;
-      margin-bottom: 22px;
-      line-height: 1.4;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 20px;
+      line-height: 1.45;
     }
 
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .info-card {
-      background: #1c1c24;
-      border: 1px solid #2e2e3a;
-      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
       padding: 12px 8px;
     }
 
     .info-card span {
       display: block;
       font-size: 11px;
-      color: #9ca3af;
+      color: #64748b;
       text-transform: uppercase;
       font-weight: 600;
       margin-bottom: 4px;
     }
 
     .info-card strong {
-      font-size: 15px;
-      color: #ffffff;
+      font-size: 14px;
+      color: #0f172a;
     }
 
     .location-box {
-      background: #181822;
-      border: 1px solid #282836;
-      border-radius: 20px;
-      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 15px;
       margin-bottom: 20px;
       text-align: left;
     }
 
     .location-header {
-      font-size: 14px;
-      font-weight: 700;
-      color: {{THEME_COLOR}};
-      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #4f46e5;
+      margin-bottom: 4px;
     }
 
     .location-address {
-      font-size: 15px;
-      font-weight: 600;
-      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
       margin-bottom: 2px;
     }
 
     .location-city {
-      font-size: 13px;
-      color: #9ca3af;
+      font-size: 12px;
+      color: #64748b;
       margin-bottom: 12px;
     }
 
@@ -199,9 +205,9 @@
       width: 100%;
       height: 190px;
       border-radius: 12px;
-      border: 1px solid #333344;
+      border: 1px solid #e2e8f0;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .map-frame iframe {
@@ -217,19 +223,24 @@
       width: 100%;
       background: #2563eb;
       color: #ffffff;
-      padding: 12px;
+      padding: 11px;
       border-radius: 10px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: all 0.2s ease;
     }
 
-
+    .btn-maps:hover {
+      background: #1d4ed8;
+    }
 
     footer {
       margin-top: 24px;
       font-size: 11px;
-      color: #6b7280;
+      color: #94a3b8;
+      font-weight: 500;
     }
   </style>
 </head>

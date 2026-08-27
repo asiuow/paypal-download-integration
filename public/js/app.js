@@ -31,7 +31,7 @@ const eventModelConfig = {
     badgeDefault: 'Turning {age}!',
     headline: 'You are invited to celebrate together!',
     shareText: 'You are invited to my birthday',
-    color: '#ef4444'
+    color: '#f43f5e'
   },
   'bautismo': {
     title: '2. Baptism',
@@ -43,7 +43,7 @@ const eventModelConfig = {
     badgeDefault: 'Holy Baptism',
     headline: 'Join us in celebrating this sacred and blessed milestone',
     shareText: 'You are invited to my baptism',
-    color: '#0ea5e9'
+    color: '#0284c7'
   },
   'asado': {
     title: '3. Barbecue',
@@ -55,7 +55,7 @@ const eventModelConfig = {
     badgeDefault: 'Great Barbecue!',
     headline: 'The grill is fired up! Come enjoy good food and friends',
     shareText: 'You are invited to a barbecue',
-    color: '#f97316'
+    color: '#ea580c'
   },
   'evento': {
     title: '4. Special Event',
@@ -67,7 +67,7 @@ const eventModelConfig = {
     badgeDefault: 'Special Celebration',
     headline: 'You are cordially invited to celebrate with us',
     shareText: 'You are invited to my event',
-    color: '#8b5cf6'
+    color: '#7c3aed'
   }
 };
 
